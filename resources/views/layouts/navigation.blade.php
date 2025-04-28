@@ -17,11 +17,10 @@
                     </x-nav-link>
                 </div>
 
-                <!-- Navigation Links for Rooms -->
+                <!-- Rooms Link -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <!-- Link for the Rooms page (index route) -->
                     <x-nav-link :href="route('rooms.index')" :active="request()->routeIs('rooms.index')" class="text-white hover:bg-blue-700">
-                        {{ __('Rooms') }} <!-- Display the word "Rooms" as the link text -->
+                        {{ __('Rooms') }}
                     </x-nav-link>
                 </div>
             </div>
