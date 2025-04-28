@@ -4,12 +4,12 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoomController;
 
-Route::middleware(['auth'])->group(function () {
-    Route::resource('rooms', RoomController::class);
-});
-
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('rooms', RoomController::class);
 });
 
 Route::get('/dashboard', function () {
