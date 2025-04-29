@@ -5,15 +5,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoomController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
-Route::middleware(['auth'])->group(function () {
-    Route::resource('rooms', RoomController::class);
-});
-
+// Admin dashboard route requiring authentication and username verification
+// Returns the 'admin.index' view and is named 'dashboard'
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('admin.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
