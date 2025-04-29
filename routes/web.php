@@ -8,8 +8,10 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+// Admin dashboard route requiring authentication and username verification
+// Returns the 'admin.index' view and is named 'dashboard'
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('admin.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
