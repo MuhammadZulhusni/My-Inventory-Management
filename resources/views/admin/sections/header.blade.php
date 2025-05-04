@@ -1,27 +1,25 @@
-<header class="navbar navbar-expand-md navbar-dark" style="background-color: #2563EB;">
+<header class="navbar navbar-expand-lg navbar-dark" style="background-color: #2563EB;">
     <div class="container-fluid">
-        <!-- Brand/Name -->
-        <a class="navbar-brand d-flex align-items-center" href="#">
-            <div class="d-none d-md-block">
-                <span class="h4 mb-0 text-white">StockMaster Pro</span>
-                <small class="d-block text-light opacity-75">Inventory Control System</small>
-            </div>
+        <!-- Brand -->
+        <a class="navbar-brand d-flex flex-column flex-md-row align-items-start align-items-md-center" href="#">
+            <span class="h5 mb-0 text-white">StockMaster</span>
+            <small class="text-light opacity-75 ms-md-2 mt-1 mt-md-0">Inventory Control</small>
         </a>
 
         <!-- Mobile Toggler -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- Navigation Links -->
+        <!-- Collapsible content -->
         <div class="collapse navbar-collapse" id="mainNav">
-            <ul class="navbar-nav ms-auto mb-2 mb-md-0">
-                
+            <ul class="navbar-nav ms-auto mt-3 mt-lg-0 d-flex flex-column flex-lg-row align-items-start align-items-lg-center">
+
                 <!-- Profile Dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-light hover-effect" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <li class="nav-item dropdown w-100 w-lg-auto">
+                    <a class="nav-link dropdown-toggle text-light hover-effect d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-user-circle me-1"></i>
-                        Profile
+                        <span>Profile</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                         <li><a class="dropdown-item" href="#">Update Profile</a></li>
@@ -30,9 +28,10 @@
                 </li>
 
                 <!-- Logout Button -->
-                <li class="nav-item">
-                    <button class="btn btn-light text-red-500 fw-bold ms-3" onclick="confirmLogout()">
-                        Logout
+                <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                    <button class="btn btn-light text-danger fw-bold" onclick="confirmLogout()">
+                        <i class="fas fa-sign-out-alt d-sm-none"></i>
+                        <span class="d-none d-sm-inline">Logout</span>
                     </button>
                 </li>
             </ul>
@@ -61,11 +60,11 @@
 </header>
 
 
-<!-- Letak sini jap -->
 <style>
     .hover-effect {
         transition: all 0.3s ease;
         position: relative;
+        padding: 0.5rem 1rem;
     }
 
     .hover-effect:hover {
@@ -76,16 +75,17 @@
     .hover-effect::after {
         content: '';
         position: absolute;
-        bottom: -5px;
-        left: 0;
-        width: 0;
+        bottom: 0;
+        left: 1rem;
+        width: calc(100% - 2rem);
         height: 2px;
         background: #fff;
-        transition: width 0.3s ease;
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
     }
 
     .hover-effect:hover::after {
-        width: 100%;
+        transform: scaleX(1);
     }
 
     .navbar {
@@ -95,12 +95,52 @@
 
     .dropdown-menu {
         animation: fadeIn 0.3s ease;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
 
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(10px);}
         to { opacity: 1; transform: translateY(0);}
     }
+
+    /* Responsive adjustments */
+    @media (max-width: 991.98px) {
+        .navbar-collapse {
+            padding-top: 1rem;
+        }
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+        .btn-light {
+            width: 100%;
+            margin-left: 0 !important;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .navbar-brand small {
+            display: block !important;
+        }
+    }
+    @media (max-width: 767.98px) {
+    .navbar-brand span.h5 {
+        font-size: 1.25rem;
+    }
+    .navbar-brand small {
+        font-size: 0.8rem;
+    }
+    .navbar-collapse {
+        padding-top: 1rem;
+    }
+    .nav-item {
+        width: 100%;
+    }
+    .btn-light {
+        font-size: 1rem;
+        padding: 0.5rem;
+    }
+}
 </style>
 
 <script>
@@ -109,4 +149,5 @@ function confirmLogout() {
     logoutModal.show();
 }
 </script>
+
 
