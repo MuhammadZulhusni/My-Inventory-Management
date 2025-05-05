@@ -3,7 +3,7 @@
 
 <div class="container-fluid px-4 mt-4">
     <!-- Page Header -->
-    <div class="row mb-4">
+    <div class="row">
         <div class="col-12">
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
                 <div class="mb-3 mb-md-0">

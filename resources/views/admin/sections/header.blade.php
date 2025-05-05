@@ -1,4 +1,4 @@
-<header class="navbar navbar-expand-lg navbar-dark" style="background-color: #2563EB;">
+<header class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #2563EB;">
     <div class="container-fluid">
         <!-- Brand -->
         <a class="navbar-brand d-flex flex-column flex-md-row align-items-start align-items-md-center" href="{{ route('dashboard') }}">
