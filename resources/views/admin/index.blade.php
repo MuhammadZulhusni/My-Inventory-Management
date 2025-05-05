@@ -3,9 +3,8 @@
 
 <div class="container-fluid">
     <div class="w-100">
-
         <!-- Page Header Section -->
-        <div class="row mb-4">
+        <div class="row mt-4">
             <div class="col-12">
                 <div class="d-flex align-items-center justify-content-between py-3 animate__animated animate__fadeIn">
                     <div>
@@ -26,7 +25,7 @@
         </div>
 
         <!-- Welcome Section with Animations -->
-        <div class="row mb-4">
+        <div class="row mt-4">
             <div class="col-12">
                 <div class="card bg-gradient-primary border-0 overflow-hidden position-relative animate__animated animate__fadeInUp" style="min-height: 220px;">
                     <!-- Animated floating circles -->
@@ -157,7 +156,6 @@
 </div>
 
 <style>
-    /* Base Styles */
     .card {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         border-radius: 16px;

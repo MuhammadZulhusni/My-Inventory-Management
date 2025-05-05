@@ -1,7 +1,7 @@
-<header class="navbar navbar-expand-lg navbar-dark" style="background-color: #2563EB;">
+<header class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #2563EB;">
     <div class="container-fluid">
         <!-- Brand -->
-        <a class="navbar-brand d-flex flex-column flex-md-row align-items-start align-items-md-center" href="#">
+        <a class="navbar-brand d-flex flex-column flex-md-row align-items-start align-items-md-center" href="{{ route('dashboard') }}">
             <span class="h5 mb-0 text-white">StockMaster</span>
             <small class="text-light opacity-75 ms-md-2 mt-1 mt-md-0">Inventory Control</small>
         </a>
@@ -17,12 +17,12 @@
 
                 <!-- Profile Dropdown -->
                 <li class="nav-item dropdown w-100 w-lg-auto">
-                    <a class="nav-link dropdown-toggle text-light hover-effect d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle text-light hover-effect d-flex align-items-center" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-user-circle me-1"></i>
                         <span>Profile</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                        <li><a class="dropdown-item" href="#">Update Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.profile') }}">Admin Profile</a></li>
                         <li><a class="dropdown-item" href="#">Change Password</a></li>
                     </ul>
                 </li>
