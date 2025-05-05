@@ -8,46 +8,63 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-
 class AdminController extends Controller
 {
     /**
-     * Displays the admin profile view.
-     * Retrieves the currently authenticated admin's data using their ID and passes it to the view.
+     * Show admin profile page
      */
     public function AdminProfile()
     {
-        $id = Auth::user()->id;                                                                 // Get the authenticated user's ID
-        $adminData = User::findOrFail($id);                                                 // Retrieve the admin's data from the database
-
-        return view('admin.admin_profile_view', compact('adminData'));    // Return the profile view with admin data
+        $adminData = Auth::user(); // Get authenticated user
+        return view('admin.admin_profile_view', compact('adminData'));
     }
 
-    public function UpdateAdminProfile(Request $request)
-{
-    $id = Auth::user()->id;
-    $admin = User::findOrFail($id);
+    /**
+     * Handle admin profile update
+     */
+    public function updateProfile(Request $request)
+    {
+    $user = User::findOrFail(Auth::id());
 
-    $admin->name = $request->name;
-    $admin->email = $request->email;
+        // Validation
+        $request->validate([
+            'name'  => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
 
-    if ($request->hasFile('photo')) {
-        // Delete old photo if exists
-        $oldPhotoPath = public_path('uploads/admin_profiles/' . $admin->photo);
-        if (file_exists($oldPhotoPath) && $admin->photo != 'no_image.png') {
-            @unlink($oldPhotoPath);
+        // Basic fields update
+        $user->name = $request->name;
+        $user->email = $request->email;
+
+        // Handle photo
+        if ($request->hasFile('photo')) {
+            $oldPath = public_path('uploads/admin_profiles/' . $user->photo);
+            if (file_exists($oldPath) && $user->photo != 'no_image.png') {
+                @unlink($oldPath);
+            }
+
+            $file = $request->file('photo');
+            $filename = date('YmdHi') . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/admin_profiles'), $filename);
+            $user->photo = $filename;
         }
 
-        // Save new photo
-        $file = $request->file('photo');
-        $filename = date('YmdHi') . '_' . $file->getClientOriginalName();
-        $file->move(public_path('uploads/admin_profiles'), $filename);
-        $admin->photo = $filename;
+        // Password update
+        if ($request->filled('current_password')) {
+            if (!Hash::check($request->current_password, $user->password)) {
+                return back()->with('error', 'Current password is incorrect.');
+            }
+
+            $request->validate([
+                'new_password' => 'required|min:6|same:confirm_password',
+            ]);
+
+            $user->password = Hash::make($request->new_password);
+        }
+
+        $user->save();
+
+        return back()->with('success', 'Profile updated successfully.');
     }
-
-    $admin->save();
-
-    return redirect()->back()->with('success', 'Profile updated successfully.');
-}
-
 }

@@ -29,32 +29,15 @@
 
                 <!-- Logout Button -->
                 <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
-                    <button class="btn btn-light text-danger fw-bold" onclick="confirmLogout()">
-                        <i class="fas fa-sign-out-alt d-sm-none"></i>
-                        <span class="d-none d-sm-inline">Logout</span>
-                    </button>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="btn btn-light text-danger fw-bold">
+                            <i class="fas fa-sign-out-alt d-sm-none"></i>
+                            <span class="d-none d-sm-inline">Logout</span>
+                        </button>
+                    </form>
                 </li>
             </ul>
-        </div>
-    </div>
-
-    <!-- Logout Confirmation Modal -->
-    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 shadow">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <p class="mb-4">Are you sure you want to log out?</p>
-                    <form id="logoutForm" method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="btn btn-danger me-2">Yes, Logout</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    </form>
-                </div>
-            </div>
         </div>
     </div>
 </header>
@@ -143,11 +126,6 @@
 }
 </style>
 
-<script>
-function confirmLogout() {
-    var logoutModal = new bootstrap.Modal(document.getElementById('logoutModal'));
-    logoutModal.show();
-}
-</script>
+
 
 
