@@ -22,7 +22,7 @@
                         <span>Profile</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                        <li><a class="dropdown-item" href="{{ route('admin.profile') }}">Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.profile') }}">Admin Profile</a></li>
                         <li><a class="dropdown-item" href="#">Change Password</a></li>
                     </ul>
                 </li>

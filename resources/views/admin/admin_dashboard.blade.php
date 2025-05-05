@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>SRMS | Student Result Management System</title>
+        <title>Inventory Management System</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
         <meta content="Themesdesign" name="author" />
@@ -43,9 +43,6 @@
 
         <!-- jQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
-        <!-- Toaster Link -->
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" >
 
         <link rel="stylesheet" href="{{ asset('backend/assets/css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('backend/assets/css/app.min.css') }}">
@@ -111,69 +108,28 @@
     <!-- Add Dashboard JS file -->
     <script src="{{asset('js/dashboard.js')}}"></script>
 
-    <!-- Toaster -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script src="{{ asset('backend/assets/js/code.js') }}"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- Laravel Flash Message Notification with Toastr.js -->
-    @if(session()->has('message'))
-        <script>
-            var type = "{{ session()->get('alert-type', 'info') }}";
-            switch (type) {
-                case 'info':
-                    toastr.info("{{ session()->get('message') }}");
-                    break;
-
-                case 'success':
-                    toastr.success("{{ session()->get('message') }}");
-                    break;
-
-                case 'warning':
-                    toastr.warning("{{ session()->get('message') }}");
-                    break;
-
-                case 'error':
-                    toastr.error("{{ session()->get('message') }}");
-                    break;
-            }
-        </script>
-    @endif
-        <script>
-        $(function(){
-            $(document).on('click', '#delete', function (e) {
-                e.preventDefault();
-                var link = $(this).attr("href");
-
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "Delete This Data?",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Swal.fire({
-                            title: 'Deleted!',
-                            text: 'Your file has been deleted.',
-                            icon: 'success',
-                            showClass: {
-                                popup: 'animate__animated animate__fadeInDown'
-                            },
-                            hideClass: {
-                                popup: 'animate__animated animate__fadeOutUp'
-                            },
-                            timer: 1500, // Time to show success message
-                            showConfirmButton: false
-                        }).then(() => {
-                            window.location.href = link;
-                        });
-                    }
-                });
+    <!-- Show SweetAlert -->
+    <script>
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: '{{ session('success') }}',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
             });
-        });
-        </script>
+        @endif
+
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '{{ session('error') }}',
+            });
+        @endif
+    </script>
 </body>
 </html>
