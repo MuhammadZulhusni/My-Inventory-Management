@@ -14,34 +14,45 @@
         <!-- Collapsible content -->
         <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav ms-auto mt-3 mt-lg-0 d-flex flex-column flex-lg-row align-items-start align-items-lg-center">
+                
+                <!-- Products Link -->
+                <li class="nav-item me-lg-3">
+                    <a class="nav-link text-light hover-effect" href="#">
+                        <i class="fas fa-boxes me-1"></i>
+                        <span>Products</span>
+                    </a>
+                </li>
 
-                <!-- Profile Dropdown -->
-                <li class="nav-item dropdown w-100 w-lg-auto">
-                    <a class="nav-link dropdown-toggle text-light hover-effect d-flex align-items-center" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <!-- Add Product Link -->
+                <li class="nav-item me-lg-3">
+                    <a class="nav-link text-light hover-effect" href="#">
+                        <i class="fas fa-plus-circle me-1"></i>
+                        <span>Add Product</span>
+                    </a>
+                </li>
+
+                <!-- Profile Link -->
+                <li class="nav-item">
+                    <a class="nav-link text-light hover-effect d-flex align-items-center" href="{{ route('admin.profile') }}">
                         <i class="fas fa-user-circle me-1"></i>
                         <span>Profile</span>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                        <li><a class="dropdown-item" href="{{ route('admin.profile') }}">Admin Profile</a></li>
-                        <li><a class="dropdown-item" href="#">Change Password</a></li>
-                    </ul>
                 </li>
 
                 <!-- Logout Button -->
                 <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="btn btn-light text-danger fw-bold">
-                            <i class="fas fa-sign-out-alt d-sm-none"></i>
-                            <span class="d-none d-sm-inline">Logout</span>
-                        </button>
-                    </form>
+                    <button class="btn btn-light text-danger fw-bold" onclick="confirmLogout()">
+                        <i class="fas fa-sign-out-alt d-sm-none"></i>
+                        <span class="d-none d-sm-inline">Logout</span>
+                    </button>
                 </li>
             </ul>
         </div>
     </div>
 </header>
 
+<!-- Include SweetAlert JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
     .hover-effect {
@@ -76,17 +87,6 @@
         padding: 0.5rem 1rem;
     }
 
-    .dropdown-menu {
-        animation: fadeIn 0.3s ease;
-        border: none;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px);}
-        to { opacity: 1; transform: translateY(0);}
-    }
-
     /* Responsive adjustments */
     @media (max-width: 991.98px) {
         .navbar-collapse {
@@ -107,25 +107,59 @@
         }
     }
     @media (max-width: 767.98px) {
-    .navbar-brand span.h5 {
-        font-size: 1.25rem;
+        .navbar-brand span.h5 {
+            font-size: 1.25rem;
+        }
+        .navbar-brand small {
+            font-size: 0.8rem;
+        }
+        .navbar-collapse {
+            padding-top: 1rem;
+        }
+        .nav-item {
+            width: 100%;
+        }
+        .btn-light {
+            font-size: 1rem;
+            padding: 0.5rem;
+        }
     }
-    .navbar-brand small {
-        font-size: 0.8rem;
-    }
-    .navbar-collapse {
-        padding-top: 1rem;
-    }
-    .nav-item {
-        width: 100%;
-    }
-    .btn-light {
-        font-size: 1rem;
-        padding: 0.5rem;
-    }
-}
 </style>
 
-
-
-
+<script>
+function confirmLogout() {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You are about to log out from the system!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#2563EB',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, Logout!',
+        cancelButtonText: 'Cancel',
+        background: '#ffffff',
+        backdrop: `
+            rgba(0,0,0,0.4)
+            url("{{ asset('images/logout-animation.gif') }}")
+            left top
+            no-repeat
+        `
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Create a hidden form and submit it
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{{ route('logout') }}';
+            
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = '_token';
+            csrfToken.value = '{{ csrf_token() }}';
+            
+            form.appendChild(csrfToken);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    });
+}
+</script>

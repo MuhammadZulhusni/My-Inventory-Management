@@ -6,6 +6,7 @@
     <title>Login | Inventory Management System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Inventory Management System Dashboard" name="description" />
+    <link rel="shortcut icon" href="{{asset('https://cdn-icons-png.flaticon.com/128/754/754822.png')}}">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
