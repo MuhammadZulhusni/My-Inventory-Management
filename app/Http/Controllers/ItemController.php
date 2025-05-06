@@ -10,23 +10,16 @@ class ItemController extends Controller
 {
     public function dashboardSummary()
     {
-        $totalItems = Item::count();
+        $totalItems = count(Item::all());
+        $lastWeekItems = count(Item::whereBetween('created_at', [now()->subWeek(), now()])->get());
+        
+        $growth = $lastWeekItems > 0 ? round((($totalItems - $lastWeekItems) / $lastWeekItems) * 100) : 0;
+
+        // Fetch low stock items
+        $lowStockCount = Item::where('quantity', '<', 10)->count();
+        $urgentRestockCount = Item::where('quantity', '<', 5)->count(); // Adjust for urgent restock
     
-        // Count items created today
-        $today = Carbon::today();
-        $yesterday = Carbon::yesterday();
-    
-        $todayCount = Item::whereDate('created_at', $today)->count();
-        $yesterdayCount = Item::whereDate('created_at', $yesterday)->count();
-    
-        // Calculate growth percentage
-        if ($yesterdayCount > 0) {
-            $growth = round((($todayCount - $yesterdayCount) / $yesterdayCount) * 100);
-        } else {
-            $growth = $todayCount > 0 ? 100 : 0;
-        }
-    
-        return view('admin.dashboard', compact('totalItems', 'growth'));
+        return view('admin.dashboard', compact('totalItems', 'growth', 'lowStockCount', 'urgentRestockCount'));
     }
 
     public function create()

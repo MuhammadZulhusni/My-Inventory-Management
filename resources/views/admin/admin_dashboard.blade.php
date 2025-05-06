@@ -111,6 +111,11 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script src="https://cdn.rawgit.com/mhuggins/countUp.js/master/dist/countUp.min.js"></script>
+
+    <!-- Chart.js for inventory movement graph -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <!-- Show SweetAlert -->
     <script>
         @if(session('success'))
@@ -153,6 +158,19 @@
         });
     </script>
     @endif
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // For Low Stock
+        var lowStock = new CountUp('.count-up[data-target]', document.querySelector('.count-up[data-target]').getAttribute('data-target'));
+        lowStock.start();
+        
+        // For Urgent Restock
+        var urgentRestock = new CountUp('.count-up[data-target]', document.querySelector('.count-up[data-target]').getAttribute('data-target'));
+        urgentRestock.start();
+    });
+    </script>
+
 
     <style>
         body {
