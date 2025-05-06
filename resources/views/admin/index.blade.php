@@ -98,20 +98,20 @@
             </div>
 
             <div class="col-md-6 col-lg-3">
-                <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #e31937;">
+                <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #22c55e;">
                     <div class="card-body p-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <h6 class="text-muted mb-2" style="font-size: 0.8rem;">SUPPLIERS</h6>
-                                <h3 class="mb-0 count-up" data-target="24">0</h3>
+                                <h6 class="text-muted mb-2" style="font-size: 0.8rem;">ITEM SOLD</h6>
+                                <h3 class="mb-0 count-up" data-target="1240">0</h3>
                             </div>
-                            <div class="bg-red-50 p-2 rounded" style="background-color: #fde8ea;">
-                                <i class="fas fa-truck text-danger" style="font-size: 1.5rem;"></i>
+                            <div class="p-2 rounded" style="background-color: #dcfce7;">
+                                <i class="fas fa-shopping-cart text-success" style="font-size: 1.5rem;"></i>
                             </div>
                         </div>
                         <div class="mt-2 pt-2 border-top">
                             <small class="text-muted">
-                                <span class="count-up" data-target="8">0</span> primary suppliers
+                                <span class="count-up" data-target="230">0</span> sold this week
                             </small>
                         </div>
                     </div>
@@ -153,35 +153,39 @@
                     </div>
                     <div class="card-body p-3">
                         <div class="d-grid gap-2">
+                            <!-- Total Items -->
                             <button class="btn btn-primary text-start py-3 d-flex align-items-center">
-                                <i class="fas fa-barcode me-3" style="font-size: 1.2rem;"></i>
+                                <i class="fas fa-plus-circle me-3" style="font-size: 1.2rem;"></i>
                                 <div>
-                                    <div style="font-weight: 600;">Scan New Item</div>
-                                    <small class="opacity-75">Add inventory via barcode</small>
+                                    <div style="font-weight: 600;">Total Items</div>
+                                    <small class="opacity-75">Add a new item</small>
                                 </div>
                             </button>
-                            
-                            <button class="btn btn-success text-start py-3 d-flex align-items-center">
-                                <i class="fas fa-clipboard-list me-3" style="font-size: 1.2rem;"></i>
-                                <div>
-                                    <div style="font-weight: 600;">Stock Count</div>
-                                    <small class="opacity-75">Perform inventory audit</small>
-                                </div>
-                            </button>
-                            
+
+                            <!-- Low Stock -->
                             <button class="btn btn-warning text-start py-3 d-flex align-items-center">
-                                <i class="fas fa-exchange-alt me-3" style="font-size: 1.2rem;"></i>
+                                <i class="fas fa-box-open me-3" style="font-size: 1.2rem;"></i>
                                 <div>
-                                    <div style="font-weight: 600;">Transfer Items</div>
-                                    <small class="opacity-75">Move between locations</small>
+                                    <div style="font-weight: 600;">Low Stock</div>
+                                    <small class="opacity-75">View items running low</small>
                                 </div>
                             </button>
-                            
+
+                            <!-- Expiring Soon -->
                             <button class="btn btn-danger text-start py-3 d-flex align-items-center">
-                                <i class="fas fa-trash-alt me-3" style="font-size: 1.2rem;"></i>
+                                <i class="fas fa-hourglass-half me-3" style="font-size: 1.2rem;"></i>
                                 <div>
-                                    <div style="font-weight: 600;">Waste Log</div>
-                                    <small class="opacity-75">Record damaged/expired</small>
+                                    <div style="font-weight: 600;">Expiring Soon</div>
+                                    <small class="opacity-75">Next 7 days expiry</small>
+                                </div>
+                            </button>
+
+                            <!-- Item Sold -->
+                            <button class="btn btn-success text-start py-3 d-flex align-items-center">
+                                <i class="fas fa-shopping-cart me-3" style="font-size: 1.2rem;"></i>
+                                <div>
+                                    <div style="font-weight: 600;">Item Sold</div>
+                                    <small class="opacity-75">230 sold this week</small>
                                 </div>
                             </button>
                         </div>

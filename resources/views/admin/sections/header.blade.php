@@ -14,20 +14,6 @@
         <!-- Collapsible content -->
         <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav ms-auto mt-3 mt-lg-0 d-flex flex-column flex-lg-row align-items-start align-items-lg-center">
-                
-                <!-- Products -->
-                <li class="nav-item me-lg-3">
-                    <a class="nav-link nav-fm" href="#">
-                        <i class="fas fa-boxes me-1"></i> Products
-                    </a>
-                </li>
-
-                <!-- Add Product -->
-                <li class="nav-item me-lg-3">
-                    <a class="nav-link nav-fm" href="#">
-                        <i class="fas fa-plus-circle me-1"></i> Add Product
-                    </a>
-                </li>
 
                 <!-- Profile -->
                 <li class="nav-item me-lg-3">
