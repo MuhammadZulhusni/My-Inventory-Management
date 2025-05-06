@@ -1,13 +1,13 @@
-<header class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #2563EB;">
+<header class="navbar navbar-expand-lg fixed-top" style="background-color: #00AEEF;">
     <div class="container-fluid">
         <!-- Brand -->
         <a class="navbar-brand d-flex flex-column flex-md-row align-items-start align-items-md-center" href="{{ route('dashboard') }}">
-            <span class="h5 mb-0 text-white">StockMaster</span>
-            <small class="text-light opacity-75 ms-md-2 mt-1 mt-md-0">Inventory Control</small>
+            <span class="h5 mb-0 text-white fw-bold">FamilyMart</span>
+            <small class="text-white opacity-75 ms-md-2 mt-1 mt-md-0">Inventory Control</small>
         </a>
 
         <!-- Mobile Toggler -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -15,33 +15,30 @@
         <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav ms-auto mt-3 mt-lg-0 d-flex flex-column flex-lg-row align-items-start align-items-lg-center">
                 
-                <!-- Products Link -->
+                <!-- Products -->
                 <li class="nav-item me-lg-3">
-                    <a class="nav-link text-light hover-effect" href="#">
-                        <i class="fas fa-boxes me-1"></i>
-                        <span>Products</span>
+                    <a class="nav-link nav-fm" href="#">
+                        <i class="fas fa-boxes me-1"></i> Products
                     </a>
                 </li>
 
-                <!-- Add Product Link -->
+                <!-- Add Product -->
                 <li class="nav-item me-lg-3">
-                    <a class="nav-link text-light hover-effect" href="#">
-                        <i class="fas fa-plus-circle me-1"></i>
-                        <span>Add Product</span>
+                    <a class="nav-link nav-fm" href="#">
+                        <i class="fas fa-plus-circle me-1"></i> Add Product
                     </a>
                 </li>
 
-                <!-- Profile Link -->
-                <li class="nav-item">
-                    <a class="nav-link text-light hover-effect d-flex align-items-center" href="{{ route('admin.profile') }}">
-                        <i class="fas fa-user-circle me-1"></i>
-                        <span>Profile</span>
+                <!-- Profile -->
+                <li class="nav-item me-lg-3">
+                    <a class="nav-link nav-fm" href="{{ route('admin.profile') }}">
+                        <i class="fas fa-user-circle me-1"></i> Profile
                     </a>
                 </li>
 
-                <!-- Logout Button -->
-                <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
-                    <button class="btn btn-light text-danger fw-bold" onclick="confirmLogout()">
+                <!-- Logout -->
+                <li class="nav-item mt-2 mt-lg-0">
+                    <button class="btn btn-white text-danger fw-semibold rounded-pill px-3" onclick="confirmLogout()">
                         <i class="fas fa-sign-out-alt d-sm-none"></i>
                         <span class="d-none d-sm-inline">Logout</span>
                     </button>
@@ -51,79 +48,51 @@
     </div>
 </header>
 
-<!-- Include SweetAlert JS -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
-    .hover-effect {
-        transition: all 0.3s ease;
-        position: relative;
-        padding: 0.5rem 1rem;
-    }
+.navbar {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 0.6rem 1.2rem;
+    font-family: 'Segoe UI', sans-serif;
+}
 
-    .hover-effect:hover {
-        color: #fff !important;
-        transform: translateY(-2px);
-    }
+.nav-fm {
+    color: white !important;
+    position: relative;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+}
 
-    .hover-effect::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 1rem;
-        width: calc(100% - 2rem);
-        height: 2px;
-        background: #fff;
-        transform: scaleX(0);
-        transition: transform 0.3s ease;
-    }
+.nav-fm:hover {
+    background-color: #8BC53F;
+    color: #fff !important;
+}
 
-    .hover-effect:hover::after {
-        transform: scaleX(1);
-    }
+.btn-white {
+    background-color: #fff;
+    border: none;
+    transition: background-color 0.3s ease;
+}
 
-    .navbar {
-        box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-        padding: 0.5rem 1rem;
-    }
+.btn-white:hover {
+    background-color: #f0f0f0;
+}
 
-    /* Responsive adjustments */
-    @media (max-width: 991.98px) {
-        .navbar-collapse {
-            padding-top: 1rem;
-        }
-        .nav-item {
-            margin-bottom: 0.5rem;
-        }
-        .btn-light {
-            width: 100%;
-            margin-left: 0 !important;
-        }
+/* Mobile Adjustments */
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        padding-top: 1rem;
     }
+    .nav-item {
+        margin-bottom: 0.5rem;
+    }
+    .btn-white {
+        width: 100%;
+    }
+}
 
-    @media (min-width: 768px) {
-        .navbar-brand small {
-            display: block !important;
-        }
-    }
-    @media (max-width: 767.98px) {
-        .navbar-brand span.h5 {
-            font-size: 1.25rem;
-        }
-        .navbar-brand small {
-            font-size: 0.8rem;
-        }
-        .navbar-collapse {
-            padding-top: 1rem;
-        }
-        .nav-item {
-            width: 100%;
-        }
-        .btn-light {
-            font-size: 1rem;
-            padding: 0.5rem;
-        }
-    }
 </style>
 
 <script>
