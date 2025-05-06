@@ -1,6 +1,10 @@
 @extends('admin.admin_dashboard')
 @section('admin')
 
+@php
+    $adminData = App\Models\User::findOrFail(Illuminate\Support\Facades\Auth::user()->id);  // Retrieve the authenticated admin's data from the database   
+@endphp
+
 <div class="container-fluid">
     <div class="w-100">
         <!-- Header with FamilyMart-style branding -->
@@ -9,7 +13,15 @@
                 <div class="d-flex align-items-center justify-content-between py-2 animate__animated animate__fadeIn">
                     <div class="d-flex align-items-center">
                         <div class="bg-white rounded-circle p-2 me-3 shadow-sm" style="width: 50px; height: 50px;">
-                            <img src="{{ asset('uploads/familymart-logo.png') }}" alt="FamilyMart" class="img-fluid">
+                            <!-- Display admin's profile photo, fallback to 'no_image.png' if not set -->
+                            @php
+                                $photo = $adminData->photo;
+                                $photoPath = public_path('uploads/admin_profiles/' . $photo);
+                                $imageUrl = (!empty($photo) && file_exists($photoPath)) 
+                                    ? asset('uploads/admin_profiles/' . $photo) 
+                                    : asset('uploads/no_image.png');
+                            @endphp
+                            <img src="{{ $imageUrl }}" alt="FamilyMart" class="img-fluid">
                         </div>
                         <div>
                             <h1 class="h4 mb-0 text-dark" style="font-weight: 700;">INVENTORY CONTROL</h1>
@@ -153,14 +165,14 @@
                     </div>
                     <div class="card-body p-3">
                         <div class="d-grid gap-2">
-                            <!-- Total Items -->
-                            <button class="btn btn-primary text-start py-3 d-flex align-items-center">
+                            <!-- Total Items (Add New Item) -->
+                            <a href="{{ route('items.create') }}" class="btn btn-primary text-start py-3 d-flex align-items-center">
                                 <i class="fas fa-plus-circle me-3" style="font-size: 1.2rem;"></i>
                                 <div>
                                     <div style="font-weight: 600;">Total Items</div>
                                     <small class="opacity-75">Add a new item</small>
                                 </div>
-                            </button>
+                            </a>
 
                             <!-- Low Stock -->
                             <button class="btn btn-warning text-start py-3 d-flex align-items-center">
@@ -192,6 +204,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
 
         <!-- Low Stock Alerts -->
