@@ -2,11 +2,11 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>Inventory Management System</title>
+        <title>Family Mart Inventory</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
         <meta content="Themesdesign" name="author" />
-        <link rel="shortcut icon" href="{{asset('https://cdn-icons-png.flaticon.com/128/754/754822.png')}}">
+        <link rel="shortcut icon" href="{{ asset('uploads/icon.jpeg') }}">
 
         <!-- Link to Google Fonts (Quicksand) -->
          <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
@@ -111,6 +111,11 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script src="https://cdn.rawgit.com/mhuggins/countUp.js/master/dist/countUp.min.js"></script>
+
+    <!-- Chart.js for inventory movement graph -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <!-- Show SweetAlert -->
     <script>
         @if(session('success'))
@@ -153,6 +158,19 @@
         });
     </script>
     @endif
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // For Low Stock
+        var lowStock = new CountUp('.count-up[data-target]', document.querySelector('.count-up[data-target]').getAttribute('data-target'));
+        lowStock.start();
+        
+        // For Urgent Restock
+        var urgentRestock = new CountUp('.count-up[data-target]', document.querySelector('.count-up[data-target]').getAttribute('data-target'));
+        urgentRestock.start();
+    });
+    </script>
+
 
     <style>
         body {

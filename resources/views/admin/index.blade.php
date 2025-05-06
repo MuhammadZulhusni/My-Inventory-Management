@@ -1,19 +1,41 @@
 @extends('admin.admin_dashboard')
+
 @section('admin')
 
 @php
     use App\Models\Item;
     use Carbon\Carbon;
 
-    $adminData = App\Models\User::findOrFail(Illuminate\Support\Facades\Auth::user()->id);  // Retrieve the authenticated admin's data from the database 
+    // Get the authenticated admin's data
+    $adminData = App\Models\User::findOrFail(Illuminate\Support\Facades\Auth::user()->id);
+
+    // Fetch total items count
     $totalItems = Item::count();
+
+    // Today's date
     $today = Carbon::today();
     $yesterday = Carbon::yesterday();
+
+    // Count of items created today and yesterday
     $todayCount = Item::whereDate('created_at', $today)->count();
     $yesterdayCount = Item::whereDate('created_at', $yesterday)->count();
 
+    // Calculate growth percentage
     $growth = $yesterdayCount > 0 ? round((($todayCount - $yesterdayCount) / $yesterdayCount) * 100) : ($todayCount > 0 ? 100 : 0);
+
+    // Fetch low stock items (below 10) and urgent restock (below 5)
+    $lowStockCount = Item::where('quantity', '<', 10)->count();
+    $urgentRestockCount = Item::where('quantity', '<', 5)->count();
+
+    // Get today's date and the date 7 days from now
+    $today = Carbon::today();
+    $sevenDaysLater = Carbon::today()->addDays(7);
+
+    // Get count of items expiring in the next 7 days
+    $expiringSoonCount = Item::whereBetween('expiry_date', [$today, $sevenDaysLater])
+                              ->count();
 @endphp
+
 
 <div class="container-fluid">
     <div class="w-100">
@@ -70,14 +92,13 @@
                         </div>
                         <div class="mt-2 pt-2 border-top">
                             <small class="{{ $growth >= 0 ? 'text-success' : 'text-danger' }}">
-                                <i class="fas {{ $growth >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }}"></i>
-                                <span class="count-up" data-target="{{ $growth }}">0</span>% change as of today
+                                <i class="fas {{ $growth >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }}"></i> 
+                                <span class="count-up" data-target="{{ $growth }}">0</span>% from last week
                             </small>
                         </div>
                     </div>
                 </div>
             </div>
-
 
             <div class="col-md-6 col-lg-3">
                 <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #00a650;">
@@ -85,7 +106,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="text-muted mb-2" style="font-size: 0.8rem;">LOW STOCK</h6>
-                                <h3 class="mb-0 count-up" data-target="127">0</h3>
+                                <h3 class="mb-0 count-up" data-target="{{ $lowStockCount }}">0</h3>
                             </div>
                             <div class="bg-green-50 p-2 rounded" style="background-color: #e6f7ed;">
                                 <i class="fas fa-exclamation-triangle text-success" style="font-size: 1.5rem;"></i>
@@ -93,20 +114,21 @@
                         </div>
                         <div class="mt-2 pt-2 border-top">
                             <small class="text-danger">
-                                <i class="fas fa-clock"></i> <span class="count-up" data-target="23">0</span> need urgent restock
+                                <i class="fas fa-clock"></i> <span class="count-up" data-target="{{ $urgentRestockCount }}">0</span> need urgent restock
                             </small>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Expiring Soon Section -->
             <div class="col-md-6 col-lg-3">
                 <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #ff8200;">
                     <div class="card-body p-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="text-muted mb-2" style="font-size: 0.8rem;">EXPIRING SOON</h6>
-                                <h3 class="mb-0 count-up" data-target="58">0</h3>
+                                <h3 class="mb-0 count-up" data-target="{{ $expiringSoonCount }}">0</h3>
                             </div>
                             <div class="bg-orange-50 p-2 rounded" style="background-color: #fff5e6;">
                                 <i class="fas fa-hourglass-half text-warning" style="font-size: 1.5rem;"></i>
@@ -145,29 +167,30 @@
 
         <!-- Main Content Area -->
         <div class="row mt-4">
-            <!-- Inventory Summary Chart -->
-            <div class="col-lg-8">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-header bg-white border-0 py-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0" style="font-weight: 600;">Inventory Movement</h5>
-                            <div class="dropdown">
-                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="chartDropdown" data-bs-toggle="dropdown">
-                                    Last 30 Days
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Last 7 Days</a></li>
-                                    <li><a class="dropdown-item" href="#">Last 30 Days</a></li>
-                                    <li><a class="dropdown-item" href="#">Last 90 Days</a></li>
-                                </ul>
-                            </div>
+        <!-- Inventory Summary Chart -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0 py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0" style="font-weight: 600;">Inventory Movement</h5>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="chartDropdown" data-bs-toggle="dropdown">
+                                Last 30 Days
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Last 7 Days</a></li>
+                                <li><a class="dropdown-item" href="#">Last 30 Days</a></li>
+                                <li><a class="dropdown-item" href="#">Last 90 Days</a></li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <canvas id="inventoryChart" height="250"></canvas>
-                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="inventoryChart" height="250"></canvas>
                 </div>
             </div>
+        </div>
+
             
             <!-- Quick Actions -->
             <div class="col-lg-4">
@@ -345,8 +368,6 @@
     }
 </style>
 
-<!-- Chart.js for inventory movement graph -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Count-up animation
