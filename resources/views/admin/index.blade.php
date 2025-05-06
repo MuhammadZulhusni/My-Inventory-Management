@@ -36,6 +36,7 @@
                               ->count();
 @endphp
 
+
 <div class="container-fluid">
     <div class="w-100">
         <!-- Header with FamilyMart-style branding -->
