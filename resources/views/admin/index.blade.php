@@ -2,7 +2,17 @@
 @section('admin')
 
 @php
-    $adminData = App\Models\User::findOrFail(Illuminate\Support\Facades\Auth::user()->id);  // Retrieve the authenticated admin's data from the database   
+    use App\Models\Item;
+    use Carbon\Carbon;
+
+    $adminData = App\Models\User::findOrFail(Illuminate\Support\Facades\Auth::user()->id);  // Retrieve the authenticated admin's data from the database 
+    $totalItems = Item::count();
+    $today = Carbon::today();
+    $yesterday = Carbon::yesterday();
+    $todayCount = Item::whereDate('created_at', $today)->count();
+    $yesterdayCount = Item::whereDate('created_at', $yesterday)->count();
+
+    $growth = $yesterdayCount > 0 ? round((($todayCount - $yesterdayCount) / $yesterdayCount) * 100) : ($todayCount > 0 ? 100 : 0);
 @endphp
 
 <div class="container-fluid">
@@ -52,20 +62,22 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="text-muted mb-2" style="font-size: 0.8rem;">TOTAL ITEMS</h6>
-                                <h3 class="mb-0 count-up" data-target="15423">0</h3>
+                                <h3 class="mb-0 count-up" data-target="{{ $totalItems }}">0</h3>
                             </div>
                             <div class="bg-blue-50 p-2 rounded" style="background-color: #e6f2ff;">
                                 <i class="fas fa-boxes text-primary" style="font-size: 1.5rem;"></i>
                             </div>
                         </div>
                         <div class="mt-2 pt-2 border-top">
-                            <small class="text-success">
-                                <i class="fas fa-arrow-up"></i> <span class="count-up" data-target="12">0</span>% from last month
+                            <small class="{{ $growth >= 0 ? 'text-success' : 'text-danger' }}">
+                                <i class="fas {{ $growth >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }}"></i>
+                                <span class="count-up" data-target="{{ $growth }}">0</span>% change as of today
                             </small>
                         </div>
                     </div>
                 </div>
             </div>
+
 
             <div class="col-md-6 col-lg-3">
                 <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #00a650;">

@@ -3,10 +3,32 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use App\Models\Item;
 
 class ItemController extends Controller
 {
+    public function dashboardSummary()
+    {
+        $totalItems = Item::count();
+    
+        // Count items created today
+        $today = Carbon::today();
+        $yesterday = Carbon::yesterday();
+    
+        $todayCount = Item::whereDate('created_at', $today)->count();
+        $yesterdayCount = Item::whereDate('created_at', $yesterday)->count();
+    
+        // Calculate growth percentage
+        if ($yesterdayCount > 0) {
+            $growth = round((($todayCount - $yesterdayCount) / $yesterdayCount) * 100);
+        } else {
+            $growth = $todayCount > 0 ? 100 : 0;
+        }
+    
+        return view('admin.dashboard', compact('totalItems', 'growth'));
+    }
+
     public function create()
     {
         return view('admin.items.create');
