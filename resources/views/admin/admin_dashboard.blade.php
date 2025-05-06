@@ -134,6 +134,26 @@
         @endif
     </script>
 
+    @if(session('swal'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: '{{ session('swal')['title'] }}',
+                text: '{{ session('swal')['text'] }}',
+                icon: '{{ session('swal')['icon'] }}',
+                showConfirmButton: {{ json_encode(session('swal')['showConfirmButton'] ?? false) }},
+                timer: {{ session('swal')['timer'] ?? 2000 }},
+                position: '{{ session('swal')['position'] ?? 'center' }}',
+                background: '{{ session('swal')['background'] ?? '#f8f9fa' }}',
+                iconColor: '{{ session('swal')['iconColor'] ?? '#28a745' }}',
+                customClass: {
+                    popup: 'animated bounceIn'
+                }
+            });
+        });
+    </script>
+    @endif
+
     <style>
         body {
             padding-top: 50px;
