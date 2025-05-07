@@ -68,9 +68,7 @@
                                 </li>
                                 <li>
                                     <div class="d-flex justify-content-between gap-2">
-                                        <button type="reset" class="btn btn-sm btn-outline-secondary w-100">
-                                            Reset
-                                        </button>
+                                        <a href="{{ route('items.index') }}" class="btn btn-sm btn-outline-secondary w-100">Reset</a>
                                         <button type="submit" class="btn btn-sm btn-primary w-100">
                                             Apply
                                         </button>
@@ -106,19 +104,19 @@
                             <td class="text-center">{{ $items->firstItem() + $index }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
+                                    @php
+                                        $imagePath = public_path('storage/' . $item->image);
+                                        $imageUrl = (!empty($item->image) && file_exists($imagePath))
+                                            ? asset('storage/' . $item->image)
+                                            : asset('uploads/no-item.png');
+                                    @endphp
+
                                     <div class="flex-shrink-0 me-3">
-                                        @if($item->image)
-                                        <img src="{{ asset('uploads/product_images/' . $item->image) }}" 
-                                             alt="{{ $item->name }}" 
-                                             class="rounded" 
-                                             width="40" 
-                                             height="40">
-                                        @else
-                                        <div class="bg-light rounded d-flex align-items-center justify-content-center" 
-                                             style="width: 40px; height: 40px;">
-                                            <i class="fas fa-box text-muted"></i>
-                                        </div>
-                                        @endif
+                                        <img src="{{ $imageUrl }}" 
+                                            alt="{{ $item->name }}" 
+                                            class="rounded" 
+                                            width="40" 
+                                            height="40">
                                     </div>
                                     <div class="flex-grow-1">
                                         <h6 class="mb-0">{{ $item->name }}</h6>
@@ -174,10 +172,10 @@
                             </td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
-                                    <a href="#" 
-                                       class="btn btn-sm btn-outline-primary" 
-                                       data-bs-toggle="tooltip" 
-                                       title="Edit">
+                                    <a href="{{ route('admin.items.edit', $item->id) }}" 
+                                    class="btn btn-sm btn-outline-primary" 
+                                    data-bs-toggle="tooltip" 
+                                    title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <form action="{{ route('items.destroy', $item->id) }}" method="POST" class="delete-form">
@@ -305,6 +303,19 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+<!-- Show success message after deletion if session has 'success' -->
+@if(session('success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Deleted!',
+        text: '{{ session('success') }}',
+        timer: 3000,
+        showConfirmButton: false
+    });
+</script>
+@endif
 
 <style>
     .card {

@@ -21,7 +21,7 @@
             <div class="card shadow-sm border-0 overflow-hidden">
                 <div class="card-header bg-gradient-primary text-white p-4">
                     <h5 class="mb-2 text-white">Personal Information</h5>
-                    <p class="mb-0 text-opacity-30">Update your profile details and password</p>
+                    <p class="mb-0 opacity-75">Update your profile details and password</p>
                 </div>
                 
                 <div class="card-body p-4">
@@ -407,5 +407,19 @@
         }
     }
 </style>
+
+
+@if(session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Profile Updated!',
+            text: '{{ session('success') }}',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK'
+        });
+    </script>
+@endif
+
 
 @endsection

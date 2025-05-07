@@ -28,7 +28,9 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/items', [ItemController::class, 'index'])->name('items.index');
     Route::get('/items/create', [ItemController::class, 'create'])->name('items.create');
     Route::post('/items', [ItemController::class, 'store'])->name('items.store');
-    Route::delete('items/{item}', [ItemController::class, 'destroy'])->name('items.destroy');
+    Route::get('/items/{id}/edit', [ItemController::class, 'edit'])->name('admin.items.edit');
+    Route::put('/items/{item}', [ItemController::class, 'update'])->name('admin.items.update'); 
+    Route::delete('/items/{item}', [ItemController::class, 'destroy'])->name('items.destroy');
 });
 
 // Laravel Breeze profile management
