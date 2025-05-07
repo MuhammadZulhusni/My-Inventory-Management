@@ -3,21 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Item;
+use Carbon\Carbon;
 
 class ItemController extends Controller
 {
     public function dashboardSummary()
     {
-        $totalItems = count(Item::all());
-        $lastWeekItems = count(Item::whereBetween('created_at', [now()->subWeek(), now()])->get());
+        $totalItems = Item::count();
+        $lastWeekItems = Item::whereBetween('created_at', [now()->subWeek(), now()])->count();
         
         $growth = $lastWeekItems > 0 ? round((($totalItems - $lastWeekItems) / $lastWeekItems) * 100) : 0;
 
-        // Fetch low stock items
         $lowStockCount = Item::where('quantity', '<', 10)->count();
-        $urgentRestockCount = Item::where('quantity', '<', 5)->count(); // Adjust for urgent restock
+        $urgentRestockCount = Item::where('quantity', '<', 5)->count();
     
         return view('admin.dashboard', compact('totalItems', 'growth', 'lowStockCount', 'urgentRestockCount'));
     }
@@ -26,39 +26,37 @@ class ItemController extends Controller
     {
         $query = Item::query();
         
-        // Search filter
         if ($request->has('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%$search%")
-                  ->orWhere('sku', 'like', "%$search%");
+            $query->where(function($q) use ($request) {
+                $q->where('name', 'like', "%{$request->search}%")
+                  ->orWhere('sku', 'like', "%{$request->search}%");
             });
         }
         
-        // Category filter
-        if ($request->has('category') && $request->category != '') {
+        if ($request->filled('category')) {
             $query->where('category', $request->category);
         }
         
-        // Stock status filter
         if ($request->has('stock_status')) {
-            switch ($request->stock_status) {
-                case 'low':
-                    $query->where('quantity', '<', 10);
-                    break;
-                case 'critical':
-                    $query->where('quantity', '<', 5);
-                    break;
-                case 'out_of_stock':
-                    $query->where('quantity', '<=', 0);
-                    break;
-            }
+            $condition = $this->getStockStatusCondition($request->stock_status);
+            $query->where('quantity', $condition[0], $condition[1]);
         }
         
-        $items = $query->paginate(10);
+        $items = $query->latest()->paginate(10);
         
         return view('admin.items.index', compact('items'));
     }
+    
+    protected function getStockStatusCondition($status)
+    {
+        return match ($status) {
+            'low' => ['<', 10],
+            'critical' => ['<', 5],
+            'out_of_stock' => ['<=', 0],
+            default => ['>', 0],
+        };
+    }
+    
 
     public function create()
     {
@@ -67,61 +65,141 @@ class ItemController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'sku' => 'required|unique:items',
-            'quantity' => 'required|integer',
-            'price' => 'required|numeric',
-            'expiry_date' => 'nullable|date',
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'sku' => 'required|unique:items|max:100',
+            'quantity' => 'required|integer|min:0',
+            'price' => 'required|numeric|min:0',
+            'expiry_date' => 'nullable|date|after_or_equal:today',
             'category' => 'required|integer',
-            'description' => 'nullable|string',
-            'cost_price' => 'nullable|numeric',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'description' => 'nullable|string|max:500',
+            'cost_price' => 'nullable|numeric|min:0',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
         ]);
-    
-        $item = new Item();
-        $item->name = $request->name;
-        $item->description = $request->description;
-        $item->sku = $request->sku;
-        $item->quantity = $request->quantity;
-        $item->price = $request->price;
-        $item->cost_price = $request->cost_price;
-        $item->expiry_date = $request->expiry_date;
-        $item->category = $request->category;
 
-        // Handle image upload
-        if($request->hasFile('image')){
-            $file = $request->file('image');
-            $imageName = date('YmdHi').'.'.$file->getClientOriginalExtension();
-            $file->move(public_path('uploads/product_images'), $imageName);
-            $item->image = $imageName;
+        try {
+            $item = new Item($validated);
+
+            if ($request->hasFile('image')) {
+                $item->image = $this->storeImage($request->file('image'));
+            }
+
+            $item->save();
+
+            return redirect()->route('items.index')->with([
+                'swal' => [
+                    'title' => 'Success!',
+                    'text' => 'Product added successfully!',
+                    'icon' => 'success'
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            return back()->withInput()->with([
+                'swal' => [
+                    'title' => 'Error!',
+                    'text' => 'Failed to add product: ' . $e->getMessage(),
+                    'icon' => 'error'
+                ]
+            ]);
+        }
+    }
+
+    protected function storeImage($file)
+    {
+        return $file->store('products', 'public');
+    }
+
+    public function edit($id)
+    {
+        $item = Item::findOrFail($id);
+        return view('admin.items.edit', compact('item'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:500',
+            'sku' => 'required|string|max:100|unique:items,sku,'.$id,
+            'quantity' => 'required|integer|min:0',
+            'price' => 'required|numeric|min:0',
+            'cost_price' => 'nullable|numeric|min:0',
+            'expiry_date' => 'nullable|date|after_or_equal:today',
+            'category' => 'required|integer',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'remove_image' => 'nullable|boolean'
+        ]);
+
+        try {
+            $item = Item::findOrFail($id);
+            $item->fill($validated);
+
+            $this->handleImageUpdate($request, $item);
+
+            $item->save();
+
+            return redirect()->route('items.index')->with([
+                'swal' => [
+                    'title' => 'Success!',
+                    'text' => 'Product updated successfully!',
+                    'icon' => 'success'
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            return back()->withInput()->with([
+                'swal' => [
+                    'title' => 'Error!',
+                    'text' => 'Failed to update product: ' . $e->getMessage(),
+                    'icon' => 'error'
+                ]
+            ]);
+        }
+    }
+
+    protected function handleImageUpdate($request, $item)
+    {
+        if ($request->remove_image && $item->image) {
+            Storage::disk('public')->delete($item->image);
+            $item->image = null;
         }
 
-        $item->save();
-
-        return redirect()->route('items.create')->with([
-            'swal' => [
-                'title' => 'Success!',
-                'text' => 'Product added successfully!',
-                'icon' => 'success',
-                'showConfirmButton' => false,
-                'timer' => 2000,
-                'position' => 'center',
-                'background' => '#f8f9fa',
-                'iconColor' => '#28a745'
-            ]
-        ]);
+        if ($request->hasFile('image')) {
+            if ($item->image) {
+                Storage::disk('public')->delete($item->image);
+            }
+            $item->image = $this->storeImage($request->file('image'));
+        }
     }
-    
+
     public function destroy($id)
     {
         try {
             $item = Item::findOrFail($id);
+            
+            if ($item->image) {
+                Storage::disk('public')->delete($item->image);
+            }
+            
             $item->delete();
             
-            return redirect()->back()->with('success', 'Item deleted successfully!');
+            return redirect()->back()->with([
+                'swal' => [
+                    'title' => 'Deleted!',
+                    'text' => 'Item deleted successfully!',
+                    'icon' => 'success'
+                ]
+            ]);
+            
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Error deleting item: ' . $e->getMessage());
+            return redirect()->back()->with([
+                'swal' => [
+                    'title' => 'Error!',
+                    'text' => 'Error deleting item: ' . $e->getMessage(),
+                    'icon' => 'error'
+                ]
+            ]);
         }
     }
 }
