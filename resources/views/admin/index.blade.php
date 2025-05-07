@@ -36,16 +36,14 @@
                               ->count();
 @endphp
 
-
 <div class="container-fluid">
     <div class="w-100">
         <!-- Header with FamilyMart-style branding -->
-        <div class="row mt-3">
+        <div class="row mt-4">
             <div class="col-12">
                 <div class="d-flex align-items-center justify-content-between py-2 animate__animated animate__fadeIn">
                     <div class="d-flex align-items-center">
-                        <div class="bg-white rounded-circle p-2 me-3 shadow-sm" style="width: 50px; height: 50px;">
-                            <!-- Display admin's profile photo, fallback to 'no_image.png' if not set -->
+                        <div class="bg-white rounded-circle p-1 me-3 shadow-sm d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
                             @php
                                 $photo = $adminData->photo;
                                 $photoPath = public_path('uploads/admin_profiles/' . $photo);
@@ -53,10 +51,13 @@
                                     ? asset('uploads/admin_profiles/' . $photo) 
                                     : asset('uploads/no_image.png');
                             @endphp
-                            <img src="{{ $imageUrl }}" alt="FamilyMart" class="img-fluid">
+                            <img src="{{ $imageUrl }}" alt="User Avatar" 
+                                class="rounded-circle border border-white" 
+                                style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
+
                         <div>
-                            <h1 class="h4 mb-0 text-dark" style="font-weight: 700;">INVENTORY CONTROL</h1>
+                            <h1 class="h4 mb-2 text-dark" style="font-weight: 700;">INVENTORY CONTROL</h1>
                             <nav class="text-xs text-muted">
                                 <span>Dashboard</span> <i class="fas fa-chevron-right mx-1" style="font-size: 0.5rem"></i> 
                                 <span class="text-primary">Overview</span>
@@ -190,55 +191,76 @@
                 </div>
             </div>
         </div>
-
             
-            <!-- Quick Actions -->
-            <div class="col-lg-4">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-header bg-white border-0 py-3">
-                        <h5 class="mb-0" style="font-weight: 600;">Quick Actions</h5>
-                    </div>
-                    <div class="card-body p-3">
-                        <div class="d-grid gap-2">
-                            <!-- Total Items (Add New Item) -->
-                            <a href="{{ route('items.create') }}" class="btn btn-primary text-start py-3 d-flex align-items-center">
-                                <i class="fas fa-plus-circle me-3" style="font-size: 1.2rem;"></i>
-                                <div>
-                                    <div style="font-weight: 600;">Total Items</div>
-                                    <small class="opacity-75">Add a new item</small>
-                                </div>
-                            </a>
+        <!-- Quick Actions -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0 py-3 d-flex align-items-center">
+                    <h5 class="mb-0 fw-semibold text-primary">
+                        Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body p-3">
+                    <div class="d-grid gap-3">
+                        <!-- Add New Item -->
+                        <a href="{{ route('items.index') }}" class="quick-action-card bg-primary bg-opacity-10 text-primary">
+                            <div class="action-icon bg-primary text-white">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="action-content">
+                                <h6 class="mb-1 fw-semibold">Total Items</h6>
+                                <p class="mb-0 small text-muted">Add a new item</p>
+                            </div>
+                            <div class="action-arrow">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </a>
 
-                            <!-- Low Stock -->
-                            <button class="btn btn-warning text-start py-3 d-flex align-items-center">
-                                <i class="fas fa-box-open me-3" style="font-size: 1.2rem;"></i>
-                                <div>
-                                    <div style="font-weight: 600;">Low Stock</div>
-                                    <small class="opacity-75">View items running low</small>
-                                </div>
-                            </button>
+                        <!-- Low Stock -->
+                        <a href="{{ route('items.index') }}?stock=low" class="quick-action-card bg-warning bg-opacity-10 text-warning">
+                            <div class="action-icon bg-warning text-white">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="action-content">
+                                <h6 class="mb-1 fw-semibold">Low Stock</h6>
+                                <p class="mb-0 small text-muted">{{ $lowStockCount }} items need attention</p>
+                            </div>
+                            <div class="action-arrow">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </a>
 
-                            <!-- Expiring Soon -->
-                            <button class="btn btn-danger text-start py-3 d-flex align-items-center">
-                                <i class="fas fa-hourglass-half me-3" style="font-size: 1.2rem;"></i>
-                                <div>
-                                    <div style="font-weight: 600;">Expiring Soon</div>
-                                    <small class="opacity-75">Next 7 days expiry</small>
-                                </div>
-                            </button>
+                        <!-- Expiring Soon -->
+                        <a href="{{ route('items.index') }}?expiring=soon" class="quick-action-card bg-danger bg-opacity-10 text-danger">
+                            <div class="action-icon bg-danger text-white">
+                                <i class="fas fa-hourglass-end"></i>
+                            </div>
+                            <div class="action-content">
+                                <h6 class="mb-1 fw-semibold">Expiring Soon</h6>
+                                <p class="mb-0 small text-muted">{{ $expiringSoonCount }} items expiring</p>
+                            </div>
+                            <div class="action-arrow">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </a>
 
-                            <!-- Item Sold -->
-                            <button class="btn btn-success text-start py-3 d-flex align-items-center">
-                                <i class="fas fa-shopping-cart me-3" style="font-size: 1.2rem;"></i>
-                                <div>
-                                    <div style="font-weight: 600;">Item Sold</div>
-                                    <small class="opacity-75">230 sold this week</small>
-                                </div>
-                            </button>
-                        </div>
+                        <!-- Sales Analytics -->
+                        <a href="#" class="quick-action-card bg-success bg-opacity-10 text-success">
+                            <div class="action-icon bg-success text-white">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="action-content">
+                                <h6 class="mb-1 fw-semibold">Sales Analytics</h6>
+                                <p class="mb-0 small text-muted">View sales performance</p>
+                            </div>
+                            <div class="action-arrow">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
+        </div>
 
         </div>
 
@@ -365,6 +387,61 @@
     
     .btn:hover {
         transform: translateY(-1px);
+    }
+
+    .quick-action-card {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        border-radius: 10px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+    }
+    
+    .quick-action-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border-color: rgba(0, 0, 0, 0.05);
+    }
+    
+    .action-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        flex-shrink: 0;
+    }
+    
+    .action-content {
+        flex-grow: 1;
+    }
+    
+    .action-arrow {
+        color: rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .quick-action-card:hover .action-arrow {
+        color: inherit;
+        transform: translateX(3px);
+    }
+    
+    /* Specific color adjustments */
+    .bg-primary.bg-opacity-10 {
+        background-color: rgba(0, 104, 183, 0.1) !important;
+    }
+    .bg-warning.bg-opacity-10 {
+        background-color: rgba(255, 193, 7, 0.1) !important;
+    }
+    .bg-danger.bg-opacity-10 {
+        background-color: rgba(220, 53, 69, 0.1) !important;
+    }
+    .bg-success.bg-opacity-10 {
+        background-color: rgba(25, 135, 84, 0.1) !important;
     }
 </style>
 

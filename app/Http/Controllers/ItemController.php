@@ -22,6 +22,44 @@ class ItemController extends Controller
         return view('admin.dashboard', compact('totalItems', 'growth', 'lowStockCount', 'urgentRestockCount'));
     }
 
+    public function index(Request $request)
+    {
+        $query = Item::query();
+        
+        // Search filter
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%$search%")
+                  ->orWhere('sku', 'like', "%$search%");
+            });
+        }
+        
+        // Category filter
+        if ($request->has('category') && $request->category != '') {
+            $query->where('category', $request->category);
+        }
+        
+        // Stock status filter
+        if ($request->has('stock_status')) {
+            switch ($request->stock_status) {
+                case 'low':
+                    $query->where('quantity', '<', 10);
+                    break;
+                case 'critical':
+                    $query->where('quantity', '<', 5);
+                    break;
+                case 'out_of_stock':
+                    $query->where('quantity', '<=', 0);
+                    break;
+            }
+        }
+        
+        $items = $query->paginate(10);
+        
+        return view('admin.items.index', compact('items'));
+    }
+
     public function create()
     {
         return view('admin.items.create');
@@ -73,5 +111,17 @@ class ItemController extends Controller
                 'iconColor' => '#28a745'
             ]
         ]);
+    }
+    
+    public function destroy($id)
+    {
+        try {
+            $item = Item::findOrFail($id);
+            $item->delete();
+            
+            return redirect()->back()->with('success', 'Item deleted successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error deleting item: ' . $e->getMessage());
+        }
     }
 }
