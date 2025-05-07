@@ -171,6 +171,45 @@
     });
     </script>
 
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle delete forms with SweetAlert
+        const deleteForms = document.querySelectorAll('.delete-form');
+        
+        deleteForms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Submit the form if confirmed
+                        form.submit();
+                    }
+                });
+            });
+        });
+
+        // Show success message after deletion if session has 'success'
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Deleted!',
+                text: '{{ session('success') }}',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        @endif
+    });
+    </script>
+
 
     <style>
         body {

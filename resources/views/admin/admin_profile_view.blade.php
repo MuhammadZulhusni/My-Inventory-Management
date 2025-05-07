@@ -5,8 +5,8 @@
     <!-- Page Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class=" mb-2 text-gray-900 font-weight-bold">Profile Settings</h1>
-            <nav aria-label="breadcrumb">
+            <h1 class="mb-2 text-gray-900 font-weight-bold">Profile Settings</h1>
+            <nav aria-label="breadcrumb" class="mt-3">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-primary">Dashboard</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Profile</li>
@@ -19,8 +19,9 @@
     <div class="row justify-content-center">
         <div class="col-xl-8 col-lg-10">
             <div class="card shadow-sm border-0 overflow-hidden">
-                <div class="card-header bg-transparent border-0 p-4">
-                    <h5 class="mb-0 font-weight-bold text-gray-800">Personal Information</h5>
+                <div class="card-header bg-gradient-primary text-white p-4">
+                    <h5 class="mb-2 text-white">Personal Information</h5>
+                    <p class="mb-0 text-opacity-30">Update your profile details and password</p>
                 </div>
                 
                 <div class="card-body p-4">
@@ -59,7 +60,7 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label text-gray-700">Username</label>
+                                    <label class="form-label text-gray-700 fw-semibold">Username</label>
                                     <div class="input-group">
                                         <span class="input-group-text bg-light border-end-0">
                                             <i class="ri-user-line text-gray-600"></i>
@@ -72,7 +73,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label text-gray-700">Email Address</label>
+                                    <label class="form-label text-gray-700 fw-semibold">Email Address</label>
                                     <div class="input-group">
                                         <span class="input-group-text bg-light border-end-0">
                                             <i class="ri-mail-line text-gray-600"></i>
@@ -85,7 +86,7 @@
                         </div>
 
                         <!-- Password Update Section -->
-                        <div class="mt-5 pt-3 border-top">
+                        <div class="mt-5 pt-4 border-top">
                             <h5 class="mb-3 d-flex align-items-center text-gray-800">
                                 <i class="ri-lock-password-line me-2 text-primary"></i> Password Settings
                             </h5>
@@ -93,7 +94,7 @@
                             <div class="row g-3">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="form-label text-gray-700">Current Password</label>
+                                        <label class="form-label text-gray-700 fw-semibold">Current Password</label>
                                         <div class="input-group">
                                             <span class="input-group-text bg-light border-end-0">
                                                 <i class="ri-key-2-line text-gray-600"></i>
@@ -109,7 +110,7 @@
                                 
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="form-label text-gray-700">New Password</label>
+                                        <label class="form-label text-gray-700 fw-semibold">New Password</label>
                                         <div class="input-group">
                                             <span class="input-group-text bg-light border-end-0">
                                                 <i class="ri-key-line text-gray-600"></i>
@@ -125,7 +126,7 @@
                                 
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="form-label text-gray-700">Confirm Password</label>
+                                        <label class="form-label text-gray-700 fw-semibold">Confirm Password</label>
                                         <div class="input-group">
                                             <span class="input-group-text bg-light border-end-0">
                                                 <i class="ri-key-fill text-gray-600"></i>
@@ -140,14 +141,15 @@
                                 </div>
                             </div>
                             
-                            <div class="alert alert-info mt-3">
-                                <i class="ri-information-line me-2"></i> Leave password fields blank if you don't want to change it.
+                            <div class="alert alert-info mt-3 d-flex align-items-center">
+                                <i class="ri-information-line me-2 fs-5"></i> 
+                                <span>Leave password fields blank if you don't want to change it.</span>
                             </div>
                         </div>
 
                         <!-- Action Buttons -->
-                        <div class="d-flex justify-content-end gap-3 mt-5 pt-3 border-top">
-                            <button type="button" id="resetButton" class="btn btn-outline-secondary px-4 rounded-pill">
+                        <div class="d-flex justify-content-end gap-3 mt-5 pt-4 border-top">
+                            <button type="button" id="resetButton" class="btn btn-light px-4 rounded-pill">
                                 <i class="ri-refresh-line me-2"></i> Reset
                             </button>
                             <button type="submit" class="btn btn-primary px-4 rounded-pill">
@@ -206,52 +208,62 @@
                 toast: true,
                 position: 'top-end',
                 showConfirmButton: false,
-                timer: 3000
+                timer: 3000,
+                background: '#f8f9fa',
+                iconColor: '#28a745'
             });
+        });
+        
+        // Form submission handling
+        $('#profileForm').submit(function(e) {
+            // You can add additional validation here if needed
         });
     });
 </script>
 
 <style>
     :root {
-        --primary-color: #6366f1;
-        --primary-hover: #4f46e5;
-        --secondary-color: #6b7280;
-        --light-gray: #f5f7fa;
-        --border-radius: 12px;
-    }
-    
-    body {
-        background-color: #f8fafc;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        --primary-color: #4e73df;
+        --primary-hover: #2e59d9;
+        --secondary-color: #858796;
+        --light-gray: #f8f9fc;
+        --border-radius: 10px;
+        --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     }
     
     .card {
         border: none;
         border-radius: var(--border-radius);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        transition: all 0.3s ease;
+        box-shadow: var(--card-shadow);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     
     .card:hover {
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-header.bg-gradient-primary {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #224abe 100%);
+        border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
     }
     
     .form-control, .form-select {
         border-radius: 8px;
         padding: 10px 15px;
-        border: 1px solid #e2e8f0;
+        border: 1px solid #d1d3e2;
         transition: all 0.3s ease;
     }
     
     .form-control:focus, .form-select:focus {
         border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
     }
     
     .input-group-text {
         background-color: var(--light-gray);
-        border-color: #e2e8f0;
+        border-color: #d1d3e2;
+        color: var(--secondary-color);
     }
     
     .btn-primary {
@@ -259,8 +271,9 @@
         border-color: var(--primary-color);
         padding: 10px 20px;
         border-radius: 50px;
-        font-weight: 500;
+        font-weight: 600;
         transition: all 0.3s ease;
+        letter-spacing: 0.5px;
     }
     
     .btn-primary:hover {
@@ -269,22 +282,27 @@
         transform: translateY(-1px);
     }
     
-    .btn-outline-secondary {
+    .btn-light {
         border-radius: 50px;
         font-weight: 500;
+        border: 1px solid #d1d3e2;
+    }
+    
+    .btn-light:hover {
+        background-color: #f3f4f8;
     }
     
     /* Avatar Upload Styles */
     .avatar-upload {
         position: relative;
-        max-width: 120px;
+        max-width: 140px;
         margin: 0 auto;
     }
     
     .avatar-edit {
         position: absolute;
-        right: 0;
-        bottom: 0;
+        right: 5px;
+        bottom: 5px;
         z-index: 1;
     }
     
@@ -294,31 +312,34 @@
     
     .avatar-edit label {
         display: inline-block;
-        width: 34px;
-        height: 34px;
+        width: 36px;
+        height: 36px;
         margin-bottom: 0;
         border-radius: 50%;
         background: var(--primary-color);
-        border: 2px solid white;
+        border: 3px solid white;
         cursor: pointer;
         font-weight: normal;
         transition: all 0.3s ease;
         display: flex;
         align-items: center;
         justify-content: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
     
     .avatar-edit label:hover {
         background: var(--primary-hover);
+        transform: scale(1.05);
     }
     
     .avatar-preview {
-        width: 120px;
-        height: 120px;
+        width: 140px;
+        height: 140px;
         position: relative;
         border-radius: 50%;
-        border: 4px solid white;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border: 5px solid white;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        background-color: #f8f9fa;
     }
     
     .avatar-preview > div {
@@ -334,17 +355,56 @@
     .breadcrumb {
         background: transparent;
         padding: 0;
+        font-size: 0.9rem;
     }
     
     .breadcrumb-item.active {
         color: var(--secondary-color);
+        font-weight: 500;
     }
     
     /* Alert Styles */
     .alert-info {
-        background-color: #f0f9ff;
-        border-color: #bae6fd;
-        color: #0369a1;
+        background-color: #f0f7ff;
+        border-color: #cce5ff;
+        color: #004085;
+        border-radius: 8px;
+    }
+    
+    /* Form Label Styles */
+    .form-label {
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Section Header Styles */
+    h5.text-gray-800 {
+        font-size: 1.1rem;
+        position: relative;
+        padding-bottom: 8px;
+    }
+    
+    h5.text-gray-800:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 40px;
+        height: 3px;
+        background: var(--primary-color);
+        border-radius: 3px;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .avatar-preview {
+            width: 120px;
+            height: 120px;
+        }
+        
+        .avatar-upload {
+            max-width: 120px;
+        }
     }
 </style>
 
