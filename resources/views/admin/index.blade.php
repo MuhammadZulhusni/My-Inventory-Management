@@ -1,3 +1,13 @@
+
+<!--
+1. Buat Modal show up only one time not every time user refresh the browser
+2. After user update product direct to .... Kene fikir sikit sbb sini ade problem in term of direction
+3. Kene clean balik code bagi kemas
+4. Untuk date dalam modal tu dia fetch day x betul x sama dgn products date expire
+-->
+
+
+
 @extends('admin.admin_dashboard')
 
 @section('admin')
@@ -238,7 +248,7 @@
                         </a>
 
                         <!-- Urgent Restock -->
-                        <a href="{{ route('items.index', ['stock_status' => 'critical']) }}" class="quick-action-card bg-danger bg-opacity-10 text-danger">
+                        <a href="{{ route('items.index', ['stock_status' => 'critical', 'urgent' => 'true']) }}" class="quick-action-card bg-danger bg-opacity-10 text-danger">
                             <div class="action-icon bg-danger text-white">
                                 <i class="fas fa-bolt"></i>
                             </div>
@@ -251,9 +261,8 @@
                             </div>
                         </a>
 
-
                         <!-- Expiring Soon -->
-                        <a href="{{ route('items.index') }}?expiring=soon" class="quick-action-card bg-danger bg-opacity-10 text-danger">
+                        <a href="{{ route('items.index') }}?expiring=soon&expire=true" class="quick-action-card bg-danger bg-opacity-10 text-danger">
                             <div class="action-icon bg-danger text-white">
                                 <i class="fas fa-hourglass-end"></i>
                             </div>

@@ -18,34 +18,52 @@ class ItemController extends Controller
 
         $lowStockCount = Item::where('quantity', '<', 10)->count();
         $urgentRestockCount = Item::where('quantity', '<', 5)->count();
+
+        $expiringSoonCount = Item::whereBetween('expiry_date', [now(), now()->addDays(7)])->count();
     
-        return view('admin.dashboard', compact('totalItems', 'growth', 'lowStockCount', 'urgentRestockCount'));
+        return view('admin.dashboard', compact('totalItems', 'growth', 'lowStockCount', 'urgentRestockCount', 'expiringSoonCount'));
     }
 
     public function index(Request $request)
     {
         $query = Item::query();
-        
+    
+        // Search filter
         if ($request->has('search')) {
             $query->where(function($q) use ($request) {
                 $q->where('name', 'like', "%{$request->search}%")
                   ->orWhere('sku', 'like', "%{$request->search}%");
             });
         }
-        
+    
+        // Category filter
         if ($request->filled('category')) {
             $query->where('category', $request->category);
         }
-        
+    
+        // Stock status filter
         if ($request->has('stock_status')) {
             $condition = $this->getStockStatusCondition($request->stock_status);
             $query->where('quantity', $condition[0], $condition[1]);
         }
-        
+    
+        // Expiring soon filter (within next 7 days)
+        if ($request->has('expiring') && $request->expiring === 'soon') {
+            $today = \Carbon\Carbon::today();
+            $next7Days = \Carbon\Carbon::today()->addDays(7);
+            $query->whereBetween('expiry_date', [$today, $next7Days]);
+        }
+
+        // Flags to control modals
+        $showExpiringSoonModal = $request->has('expire') && $request->expire === 'true';
+        $showUrgentStockModal = $request->has('urgent') && $request->urgent === 'true';
+
+        // Get paginated results
         $items = $query->latest()->paginate(10);
-        
-        return view('admin.items.index', compact('items'));
+    
+        return view('admin.items.index', compact('items', 'showExpiringSoonModal', 'showUrgentStockModal'));
     }
+    
     
     protected function getStockStatusCondition($status)
     {
@@ -139,7 +157,7 @@ class ItemController extends Controller
 
             $item->save();
 
-            return redirect()->route('items.index')->with([
+            return redirect()->route('admin.items.edit', ['id' => $id])->with([
                 'swal' => [
                     'title' => 'Success!',
                     'text' => 'Product updated successfully!',
@@ -202,7 +220,7 @@ class ItemController extends Controller
             ]);
         }
     }
-    
+
     public function restock(Request $request, Item $item)
     {
         $request->validate([
