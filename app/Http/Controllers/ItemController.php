@@ -202,4 +202,17 @@ class ItemController extends Controller
             ]);
         }
     }
+    
+    public function restock(Request $request, Item $item)
+    {
+        $request->validate([
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        $item->quantity += $request->quantity;
+        $item->save();
+
+        return redirect()->back()->with('success', 'Product restocked successfully.');
+    }
+
 }

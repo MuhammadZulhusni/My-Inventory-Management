@@ -36,10 +36,17 @@
                               ->count();
 @endphp
 
+@if(request('stock_status') == 'low')
+    <h4 class="mb-4 text-warning">Low Stock Items (quantity < 10)</h4>
+@elseif(request('stock_status') == 'critical')
+    <h4 class="mb-4 text-danger">Urgent Restock Items (quantity < 5)</h4>
+@endif
+
+
 <div class="container-fluid">
     <div class="w-100">
         <!-- Header with FamilyMart-style branding -->
-        <div class="row mt-4">
+        <div class="row">
             <div class="col-12">
                 <div class="d-flex align-items-center justify-content-between py-2 animate__animated animate__fadeIn">
                     <div class="d-flex align-items-center">
@@ -57,7 +64,7 @@
                         </div>
 
                         <div>
-                            <h1 class="h4 mb-2 text-dark" style="font-weight: 700;">INVENTORY CONTROL</h1>
+                            <h1 class="h4 mb-2 mt-4 text-dark" style="font-weight: 700;">INVENTORY CONTROL</h1>
                             <nav class="text-xs text-muted">
                                 <span>Dashboard</span> <i class="fas fa-chevron-right mx-1" style="font-size: 0.5rem"></i> 
                                 <span class="text-primary">Overview</span>
@@ -217,7 +224,7 @@
                         </a>
 
                         <!-- Low Stock -->
-                        <a href="{{ route('items.index') }}?stock=low" class="quick-action-card bg-warning bg-opacity-10 text-warning">
+                        <a href="{{ route('items.index', ['stock_status' => 'low']) }}" class="quick-action-card bg-warning bg-opacity-10 text-warning">
                             <div class="action-icon bg-warning text-white">
                                 <i class="fas fa-exclamation-triangle"></i>
                             </div>
@@ -229,6 +236,21 @@
                                 <i class="fas fa-chevron-right"></i>
                             </div>
                         </a>
+
+                        <!-- Urgent Restock -->
+                        <a href="{{ route('items.index', ['stock_status' => 'critical']) }}" class="quick-action-card bg-danger bg-opacity-10 text-danger">
+                            <div class="action-icon bg-danger text-white">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="action-content">
+                                <h6 class="mb-1 fw-semibold">Urgent Restock</h6>
+                                <p class="mb-0 small text-muted">{{ $urgentRestockCount }} items critically low</p>
+                            </div>
+                            <div class="action-arrow">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </a>
+
 
                         <!-- Expiring Soon -->
                         <a href="{{ route('items.index') }}?expiring=soon" class="quick-action-card bg-danger bg-opacity-10 text-danger">

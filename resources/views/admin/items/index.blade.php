@@ -101,6 +101,80 @@
                     <tbody>
                         @forelse ($items as $index => $item)
                         <tr>
+                            <!-- Restock Modal -->
+                            <div class="modal fade" id="restockModal{{ $item->id }}" tabindex="-1" aria-labelledby="restockModalLabel{{ $item->id }}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content border-0 shadow-lg">
+                                        <form action="{{ route('items.restock', $item->id) }}" method="POST">
+                                            @csrf
+                                            <!-- Modal Header -->
+                                            <div class="modal-header bg-gradient-primary text-white">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="flex-shrink-0 bg-white bg-opacity-10 p-2 rounded-circle me-3">
+                                                        <i class="ri-archive-line fs-4"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h5 class="modal-title mb-0 text-white" id="restockModalLabel{{ $item->id }}">Restock Product</h5>
+                                                        <p class="small mb-0 opacity-75">Add inventory for {{ $item->name }}</p>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            
+                                            <!-- Modal Body -->
+                                            <div class="modal-body">
+                                                <div class="d-flex align-items-center mb-4">
+                                                    @if($item->image)
+                                                        <img src="{{ asset('storage/'.$item->image) }}" alt="{{ $item->name }}" class="rounded-3 me-3" width="60" height="60">
+                                                    @else
+                                                        <div class="bg-light rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px;">
+                                                            <i class="ri-box-3-line text-muted fs-4"></i>
+                                                        </div>
+                                                    @endif
+                                                    <div>
+                                                        <h6 class="mb-1">{{ $item->name }}</h6>
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="badge bg-light text-dark me-2">SKU: {{ $item->sku }}</span>
+                                                            <span class="badge {{ $item->quantity < 5 ? 'bg-danger' : ($item->quantity < 10 ? 'bg-warning text-dark' : 'bg-success') }}">
+                                                                Stock: {{ $item->quantity }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="quantity{{ $item->id }}" class="form-label fw-semibold">Quantity to Add</label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-light">
+                                                            <i class="ri-number-1 text-primary"></i>
+                                                        </span>
+                                                        <input type="number" 
+                                                            name="quantity" 
+                                                            id="quantity{{ $item->id }}" 
+                                                            class="form-control form-control-lg"
+                                                            min="1" 
+                                                            value="10"
+                                                            required>
+                                                        <span class="input-group-text bg-light">units</span>
+                                                    </div>
+                                                    <div class="form-text">Current stock will be increased by this amount</div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Modal Footer -->
+                                            <div class="modal-footer border-top-0">
+                                                <button type="button" class="btn btn-light px-4 rounded-pill" data-bs-dismiss="modal">
+                                                    <i class="ri-close-line me-1"></i> Cancel
+                                                </button>
+                                                <button type="submit" class="btn btn-primary px-4 rounded-pill">
+                                                    <i class="ri-add-circle-line me-1"></i> Confirm Restock
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
                             <td class="text-center">{{ $items->firstItem() + $index }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
@@ -172,12 +246,24 @@
                             </td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
+                                    {{-- Edit button --}}
                                     <a href="{{ route('admin.items.edit', $item->id) }}" 
                                     class="btn btn-sm btn-outline-primary" 
                                     data-bs-toggle="tooltip" 
                                     title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
+
+                                    {{-- Restock link as a button --}}
+                                    <a class="btn btn-sm btn-outline-warning" 
+                                        title="Restock" 
+                                        data-bs-target="#restockModal{{ $item->id }}" 
+                                        data-bs-toggle="modal">
+                                        <i class="fas fa-plus"></i>
+                                    </a>
+
+
+                                    {{-- Delete button --}}
                                     <form action="{{ route('items.destroy', $item->id) }}" method="POST" class="delete-form">
                                         @csrf
                                         @method('DELETE')
@@ -208,6 +294,7 @@
                 </table>
             </div>
         </div>
+
         
         <!-- Pagination -->
         @if($items->hasPages())
@@ -302,6 +389,15 @@ document.addEventListener('DOMContentLoaded', function() {
         form.submit();
     });
 });
+
+/* For Restock Hovering */
+document.addEventListener('DOMContentLoaded', function () {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+    tooltipTriggerList.forEach(function (el) {
+        new bootstrap.Tooltip(el);
+    });
+});
+
 </script>
 
 <!-- Show success message after deletion if session has 'success' -->
@@ -414,6 +510,52 @@ document.addEventListener('DOMContentLoaded', function() {
     .swal2-cancel {
         background-color: #6c757d !important;
         border-color: #6c757d !important;
+    }
+
+
+    .modal.fade .modal-dialog {
+        transform: translateY(-20px);
+        opacity: 0;
+        transition: all 0.3s ease-out;
+    }
+    
+    .modal.show .modal-dialog {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    
+    /* Modal Header Gradient */
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+        border-radius: 0.3rem 0.3rem 0 0 !important;
+    }
+    
+    /* Input Styling */
+    .form-control-lg {
+        padding: 0.75rem 1rem;
+        font-size: 1.05rem;
+    }
+    
+    /* Button Styling */
+    .btn.rounded-pill {
+        border-radius: 50px !important;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(78, 115, 223, 0.3);
+    }
+    
+    /* Badge Styling */
+    .badge {
+        padding: 0.35em 0.65em;
+        font-weight: 500;
+    }
+    
+    /* Product Image Container */
+    .bg-light {
+        background-color: #f8f9fa !important;
     }
 </style>
 
