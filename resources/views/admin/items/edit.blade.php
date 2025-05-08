@@ -184,8 +184,8 @@
 
                         <!-- Form Actions -->
                         <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
-                            <a href="{{ route('items.index') }}" class="btn btn-outline-secondary px-4 rounded-pill">
-                                <i class="ri-arrow-left-line me-2"></i> Cancel
+                            <a href="javascript:history.back();" class="btn btn-outline-secondary px-4 rounded-pill">
+                                <i class="ri-arrow-left-line me-2"></i> Back
                             </a>
                             <button type="submit" class="btn btn-primary px-4 rounded-pill">
                                 <i class="ri-save-line me-2"></i> Update Product

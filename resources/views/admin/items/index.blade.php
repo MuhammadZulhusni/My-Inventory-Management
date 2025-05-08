@@ -1,6 +1,222 @@
 @extends('admin.admin_dashboard')
 
 @section('admin')
+
+@if ($showExpiringSoonModal)
+<!-- Expiring Soon Modal -->
+<div class="modal fade" id="expiringSoonModal" tabindex="-1" aria-labelledby="expiringSoonModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header bg-gradient-warning text-dark">
+        <div class="d-flex align-items-center">
+          <div class="flex-shrink-0 bg-white bg-opacity-25 p-2 rounded-circle me-3">
+            <i class="ri-alarm-warning-fill fs-4"></i>
+          </div>
+          <div>
+            <h5 class="modal-title mb-0" id="expiringSoonModalLabel">Items Expiring Soon</h5>
+            <p class="small mb-0 opacity-75">Products expiring within 7 days</p>
+          </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-warning bg-light-warning border-0 mb-4">
+          <div class="d-flex align-items-center">
+            <i class="ri-information-line me-2 fs-4"></i>
+            <div>
+              <h6 class="mb-1">Action Required</h6>
+              <p class="mb-0 small">These items will expire soon and may need attention</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Product</th>
+                <th>Expiry Date</th>
+                <th>Stock</th>
+                <th>Days Left</th>
+              </tr>
+            </thead>
+            <tbody>
+              @forelse ($items as $item)
+                @php
+                  $expiryDate = \Carbon\Carbon::parse($item->expiry_date);
+                  $daysLeft = $expiryDate->diffInDays(now());
+                  $isCritical = $daysLeft <= 3;
+                @endphp
+                <tr class="{{ $isCritical ? 'table-danger' : '' }}">
+                  <td>
+                    <div class="d-flex align-items-center">
+                      @if($item->image)
+                        <img src="{{ asset('storage/'.$item->image) }}" alt="{{ $item->name }}" class="rounded me-2" width="40" height="40">
+                      @else
+                        <div class="bg-light rounded d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
+                          <i class="ri-box-3-line text-muted"></i>
+                        </div>
+                      @endif
+                      <div>
+                        <h6 class="mb-0">{{ $item->name }}</h6>
+                        <small class="text-muted">{{ $item->sku }}</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="{{ $isCritical ? 'fw-bold text-danger' : '' }}">
+                      {{ $expiryDate->format('d M Y') }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge {{ $item->quantity < 5 ? 'bg-danger' : ($item->quantity < 10 ? 'bg-warning text-dark' : 'bg-success') }}">
+                      {{ $item->quantity }} units
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge {{ $isCritical ? 'bg-danger' : 'bg-warning text-dark' }}">
+                      {{ $daysLeft }} {{ Str::plural('day', $daysLeft) }} left
+                    </span>
+                  </td>
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="4" class="text-center py-4 text-muted">
+                    <i class="ri-checkbox-circle-line fs-3 text-success"></i>
+                    <p class="mb-0 mt-2">No items expiring soon</p>
+                  </td>
+                </tr>
+              @endforelse
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer border-top-0">
+        <button type="button" class="btn btn-light px-4 rounded-pill" data-bs-dismiss="modal">
+          <i class="ri-close-line me-1"></i> Dismiss
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+@endif
+
+@if ($showUrgentStockModal)
+<!-- Urgent Stock Modal -->
+<div class="modal fade" id="urgentStockModal" tabindex="-1" aria-labelledby="urgentStockModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header bg-gradient-danger text-white">
+        <div class="d-flex align-items-center">
+          <div class="flex-shrink-0 bg-white bg-opacity-25 p-2 rounded-circle me-3">
+            <i class="ri-error-warning-fill fs-4"></i>
+          </div>
+          <div>
+            <h5 class="modal-title mb-0" id="urgentStockModalLabel">Urgent Stock Alert</h5>
+            <p class="small mb-0 opacity-75">Critical inventory levels</p>
+          </div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger bg-light-danger border-0 mb-4">
+          <div class="d-flex align-items-center">
+            <i class="ri-alert-line me-2 fs-4"></i>
+            <div>
+              <h6 class="mb-1">Immediate Attention Required</h6>
+              <p class="mb-0 small">These items are dangerously low in stock</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Product</th>
+                <th>Current Stock</th>
+                <th>Last Restocked</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @php $hasCriticalItems = false; @endphp
+              @foreach ($items as $item)
+                @if ($item->quantity < 5)
+                  @php $hasCriticalItems = true; @endphp
+                  <tr>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        @if($item->image)
+                          <img src="{{ asset('storage/'.$item->image) }}" alt="{{ $item->name }}" class="rounded me-2" width="40" height="40">
+                        @else
+                          <div class="bg-light rounded d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
+                            <i class="ri-box-3-line text-muted"></i>
+                          </div>
+                        @endif
+                        <div>
+                          <h6 class="mb-0">{{ $item->name }}</h6>
+                          <small class="text-muted">{{ $item->sku }}</small>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge bg-danger">
+                        {{ $item->quantity }} units
+                      </span>
+                    </td>
+                    <td>
+                      @if($item->updated_at)
+                        {{ $item->updated_at->diffForHumans() }}
+                      @else
+                        <span class="text-muted">Never</span>
+                      @endif
+                    </td>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 me-2">
+                          <div class="spinner-grow spinner-grow-sm text-danger" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                        </div>
+                        <div>
+                          @if($item->quantity <= 2)
+                            <span class="text-danger fw-bold">Critical</span>
+                          @else
+                            <span class="text-warning fw-bold">Low</span>
+                          @endif
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                @endif
+              @endforeach
+              
+              @unless($hasCriticalItems)
+                <tr>
+                  <td colspan="4" class="text-center py-4 text-muted">
+                    <i class="ri-checkbox-circle-line fs-3 text-success"></i>
+                    <p class="mb-0 mt-2">No urgent stock issues</p>
+                  </td>
+                </tr>
+              @endunless
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer border-top-0">
+        <button type="button" class="btn btn-light px-4 rounded-pill" data-bs-dismiss="modal">
+          <i class="ri-close-line me-1"></i> Dismiss
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+@endif
+
+
+
+
 <div class="container-fluid py-4">
     <!-- Header with Add New button -->
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -400,6 +616,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
 </script>
 
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    @if ($showExpiringSoonModal)
+      const expModal = new bootstrap.Modal(document.getElementById('expiringSoonModal'));
+      expModal.show();
+    @endif
+
+    @if ($showUrgentStockModal)
+      const urgentModal = new bootstrap.Modal(document.getElementById('urgentStockModal'));
+      urgentModal.show();
+    @endif
+  });
+</script>
+
+
+
 <!-- Show success message after deletion if session has 'success' -->
 @if(session('success'))
 <script>
@@ -412,6 +645,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 </script>
 @endif
+
 
 <style>
     .card {
@@ -556,6 +790,71 @@ document.addEventListener('DOMContentLoaded', function () {
     /* Product Image Container */
     .bg-light {
         background-color: #f8f9fa !important;
+    }
+
+    /* Modal Animation */
+    .modal.fade .modal-dialog {
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: all 0.3s ease-out;
+    }
+
+    .modal.show .modal-dialog {
+    transform: translateY(0);
+    opacity: 1;
+    }
+
+    /* Gradient Headers */
+    .bg-gradient-warning {
+    background: linear-gradient(135deg, #f6c23e 0%, #e0a800 100%);
+    border-radius: 0.3rem 0.3rem 0 0 !important;
+    }
+
+    .bg-gradient-danger {
+    background: linear-gradient(135deg, #e74a3b 0%, #be2617 100%);
+    border-radius: 0.3rem 0.3rem 0 0 !important;
+    }
+
+    /* Alert Styling */
+    .alert {
+    border-left: 4px solid transparent;
+    border-radius: 8px;
+    }
+
+    .alert-warning {
+    border-left-color: #f6c23e;
+    }
+
+    .alert-danger {
+    border-left-color: #e74a3b;
+    }
+
+    /* Table Styling */
+    .table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+    }
+
+    /* Button Styling */
+    .btn.rounded-pill {
+    border-radius: 50px !important;
+    transition: all 0.2s ease;
+    }
+
+    .btn-warning:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(246, 194, 62, 0.3);
+    }
+
+    .btn-danger:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(231, 74, 59, 0.3);
+    }
+
+    /* Badge Styling */
+    .badge {
+    padding: 0.4em 0.75em;
+    font-weight: 500;
+    letter-spacing: 0.5px;
     }
 </style>
 
