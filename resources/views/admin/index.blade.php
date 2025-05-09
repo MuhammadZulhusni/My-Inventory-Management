@@ -1,11 +1,8 @@
 
 <!--
-1. Buat Modal show up only one time not every time user refresh the browser
-2. After user update product direct to .... Kene fikir sikit sbb sini ade problem in term of direction
 3. Kene clean balik code bagi kemas
 4. Untuk date dalam modal tu dia fetch day x betul x sama dgn products date expire
 -->
-
 
 
 @extends('admin.admin_dashboard')
@@ -213,7 +210,7 @@
         <div class="col-lg-4">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-header bg-white border-0 py-3 d-flex align-items-center">
-                    <h5 class="mb-0 fw-semibold text-primary">
+                    <h5 class="mb-0" style="font-weight: 600;">
                         Quick Actions
                     </h5>
                 </div>

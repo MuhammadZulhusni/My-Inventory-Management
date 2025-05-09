@@ -59,7 +59,7 @@ class ItemController extends Controller
         $showUrgentStockModal = $request->has('urgent') && $request->urgent === 'true';
 
         // Get paginated results
-        $items = $query->latest()->paginate(10);
+        $items = $query->latest()->paginate(10)->withQueryString();
     
         return view('admin.items.index', compact('items', 'showExpiringSoonModal', 'showUrgentStockModal'));
     }
@@ -157,7 +157,7 @@ class ItemController extends Controller
 
             $item->save();
 
-            return redirect()->route('admin.items.edit', ['id' => $id])->with([
+            return redirect()->route('items.index', ['id' => $id])->with([
                 'swal' => [
                     'title' => 'Success!',
                     'text' => 'Product updated successfully!',
