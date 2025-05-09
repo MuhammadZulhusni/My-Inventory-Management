@@ -1,10 +1,3 @@
-
-<!--
-3. Kene clean balik code bagi kemas
-4. Untuk date dalam modal tu dia fetch day x betul x sama dgn products date expire
--->
-
-
 @extends('admin.admin_dashboard')
 
 @section('admin')
@@ -272,14 +265,14 @@
                             </div>
                         </a>
 
-                        <!-- Sales Analytics -->
-                        <a href="#" class="quick-action-card bg-success bg-opacity-10 text-success">
-                            <div class="action-icon bg-success text-white">
+                        <!-- Item Sold -->
+                        <a href="#" class="quick-action-card bg-primary bg-opacity-10 text-primary">
+                            <div class="action-icon bg-primary text-white">
                                 <i class="fas fa-chart-line"></i>
                             </div>
                             <div class="action-content">
-                                <h6 class="mb-1 fw-semibold">Sales Analytics</h6>
-                                <p class="mb-0 small text-muted">View sales performance</p>
+                                <h6 class="mb-1 fw-semibold">Item Sold</h6>
+                                <p class="mb-0 small text-muted">Check total items sold</p>
                             </div>
                             <div class="action-arrow">
                                 <i class="fas fa-chevron-right"></i>

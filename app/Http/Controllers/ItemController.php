@@ -202,7 +202,7 @@ class ItemController extends Controller
             
             $item->delete();
             
-            return redirect()->back()->with([
+            return redirect()->route('items.index')->with([
                 'swal' => [
                     'title' => 'Deleted!',
                     'text' => 'Item deleted successfully!',
@@ -230,7 +230,7 @@ class ItemController extends Controller
         $item->quantity += $request->quantity;
         $item->save();
 
-        return redirect()->back()->with('success', 'Product restocked successfully.');
+        return redirect()->route('items.index')->with('success', 'Product restocked successfully.');
     }
 
 }

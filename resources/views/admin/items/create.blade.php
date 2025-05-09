@@ -15,7 +15,7 @@
         <div class="card-header bg-white border-bottom py-3">
             <div class="d-flex justify-content-between align-items-center">
                 <h4 class="mb-0 text-primary"><i class="fas fa-cube me-2"></i> Add New Product</h4>
-                <a href="{{ route('items.index') }}" class="btn btn-sm btn-outline-secondary">
+                <a href="javascript:history.back();" class="btn btn-sm btn-outline-secondary">
                     <i class="fas fa-arrow-left me-1"></i> Back to Products
                 </a>
             </div>

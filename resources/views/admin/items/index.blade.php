@@ -43,9 +43,9 @@
             <tbody>
               @forelse ($items as $item)
                 @php
-                  $expiryDate = \Carbon\Carbon::parse($item->expiry_date);
-                  $daysLeft = $expiryDate->diffInDays(now());
-                  $isCritical = $daysLeft <= 3;
+                $expiryDate = \Carbon\Carbon::parse($item->expiry_date)->startOfDay();
+                $daysLeft = now()->startOfDay()->diffInDays($expiryDate, false); // signed, rounded
+                $isCritical = $daysLeft <= 3 && $daysLeft >= 0;
                 @endphp
                 <tr class="{{ $isCritical ? 'table-danger' : '' }}">
                   <td>
@@ -74,10 +74,18 @@
                     </span>
                   </td>
                   <td>
-                    <span class="badge {{ $isCritical ? 'bg-danger' : 'bg-warning text-dark' }}">
-                      {{ $daysLeft }} {{ Str::plural('day', $daysLeft) }} left
-                    </span>
-                  </td>
+                    @if ($daysLeft < 0)
+                        <span class="badge bg-secondary">
+                        Expired {{ abs($daysLeft) }} {{ Str::plural('day', abs($daysLeft)) }} ago
+                        </span>
+                    @elseif ($daysLeft === 0)
+                        <span class="badge bg-warning text-dark">Expires today</span>
+                    @else
+                        <span class="badge {{ $isCritical ? 'bg-danger' : 'bg-warning text-dark' }}">
+                        {{ $daysLeft }} {{ Str::plural('day', $daysLeft) }} left
+                        </span>
+                    @endif
+                    </td>
                 </tr>
               @empty
                 <tr>
@@ -213,8 +221,6 @@
   </div>
 </div>
 @endif
-
-
 
 
 <div class="container-fluid py-4">
@@ -630,7 +636,6 @@ document.addEventListener('DOMContentLoaded', function () {
     @endif
   });
 </script>
-
 
 
 <!-- Show success message after deletion if session has 'success' -->
