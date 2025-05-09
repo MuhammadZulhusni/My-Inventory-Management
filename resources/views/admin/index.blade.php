@@ -268,7 +268,7 @@
                         <!-- Item Sold -->
                         <a href="#" class="quick-action-card bg-primary bg-opacity-10 text-primary">
                             <div class="action-icon bg-primary text-white">
-                                <i class="fas fa-chart-line"></i>
+                                <i class="fas fa-shopping-cart"></i>
                             </div>
                             <div class="action-content">
                                 <h6 class="mb-1 fw-semibold">Item Sold</h6>
