@@ -37,7 +37,6 @@
                                     ? asset('uploads/admin_profiles/' . $photo) 
                                     : asset('uploads/no_image.png');
                             @endphp
-                            
                             <div class="position-relative d-inline-block">
                                 <div class="avatar-upload">
                                     <div class="avatar-edit">
@@ -53,6 +52,11 @@
                                 </div>
                                 <h4 class="mt-3 mb-0 text-gray-900">{{ $adminData->name }}</h4>
                                 <p class="text-muted">{{ $adminData->email }}</p>
+
+                                <!-- Display validation error for photo -->
+                                @error('photo')
+                                    <div class="text-danger mt-2">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
 
