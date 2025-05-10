@@ -2,70 +2,73 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use App\Models\Item;
 use App\Models\Sale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class ItemController extends Controller
 {
+    /**
+     * Show dashboard summary with item stats.
+     */
     public function dashboardSummary()
     {
         $totalItems = Item::count();
         $lastWeekItems = Item::whereBetween('created_at', [now()->subWeek(), now()])->count();
-        
         $growth = $lastWeekItems > 0 ? round((($totalItems - $lastWeekItems) / $lastWeekItems) * 100) : 0;
-
         $lowStockCount = Item::where('quantity', '<', 10)->count();
         $urgentRestockCount = Item::where('quantity', '<', 5)->count();
-
         $expiringSoonCount = Item::whereBetween('expiry_date', [now(), now()->addDays(7)])->count();
-    
+
         return view('admin.dashboard', compact('totalItems', 'growth', 'lowStockCount', 'urgentRestockCount', 'expiringSoonCount'));
     }
 
+    /**
+     * Display a listing of items with optional filters.
+     */
     public function index(Request $request)
     {
         $query = Item::query();
-    
-        // Search filter
+
+        // Search by name or SKU
         if ($request->has('search')) {
-            $query->where(function($q) use ($request) {
+            $query->where(function ($q) use ($request) {
                 $q->where('name', 'like', "%{$request->search}%")
                   ->orWhere('sku', 'like', "%{$request->search}%");
             });
         }
-    
-        // Category filter
+
+        // Filter by category
         if ($request->filled('category')) {
             $query->where('category', $request->category);
         }
-    
-        // Stock status filter
+
+        // Filter by stock status (low, critical, out_of_stock)
         if ($request->has('stock_status')) {
             $condition = $this->getStockStatusCondition($request->stock_status);
             $query->where('quantity', $condition[0], $condition[1]);
         }
-    
-        // Expiring soon filter (within next 7 days)
+
+        // Filter items expiring in the next 7 days
         if ($request->has('expiring') && $request->expiring === 'soon') {
-            $today = \Carbon\Carbon::today();
-            $next7Days = \Carbon\Carbon::today()->addDays(7);
-            $query->whereBetween('expiry_date', [$today, $next7Days]);
+            $query->whereBetween('expiry_date', [Carbon::today(), Carbon::today()->addDays(7)]);
         }
 
-        // Flags to control modals
-        $showExpiringSoonModal = $request->has('expire') && $request->expire === 'true';
-        $showUrgentStockModal = $request->has('urgent') && $request->urgent === 'true';
+        // Modal flags
+        $showExpiringSoonModal = $request->expire === 'true';
+        $showUrgentStockModal = $request->urgent === 'true';
 
-        // Get paginated results
+        // Paginate results
         $items = $query->latest()->paginate(10)->withQueryString();
-    
+
         return view('admin.items.index', compact('items', 'showExpiringSoonModal', 'showUrgentStockModal'));
     }
-    
-    
+
+    /**
+     * Return stock condition array based on status string.
+     */
     protected function getStockStatusCondition($status)
     {
         return match ($status) {
@@ -75,13 +78,18 @@ class ItemController extends Controller
             default => ['>', 0],
         };
     }
-    
 
+    /**
+     * Show create form.
+     */
     public function create()
     {
         return view('admin.items.create');
     }
 
+    /**
+     * Store new item in DB.
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -99,6 +107,7 @@ class ItemController extends Controller
         try {
             $item = new Item($validated);
 
+            // Store image if uploaded
             if ($request->hasFile('image')) {
                 $item->image = $this->storeImage($request->file('image'));
             }
@@ -124,23 +133,32 @@ class ItemController extends Controller
         }
     }
 
+    /**
+     * Store uploaded image in public/products.
+     */
     protected function storeImage($file)
     {
         return $file->store('products', 'public');
     }
 
+    /**
+     * Show the edit form.
+     */
     public function edit($id)
     {
         $item = Item::findOrFail($id);
         return view('admin.items.edit', compact('item'));
     }
 
+    /**
+     * Update item details.
+     */
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:500',
-            'sku' => 'required|string|max:100|unique:items,sku,'.$id,
+            'sku' => 'required|string|max:100|unique:items,sku,' . $id,
             'quantity' => 'required|integer|min:0',
             'price' => 'required|numeric|min:0',
             'cost_price' => 'nullable|numeric|min:0',
@@ -158,7 +176,7 @@ class ItemController extends Controller
 
             $item->save();
 
-            return redirect()->route('items.index', ['id' => $id])->with([
+            return redirect()->route('items.index')->with([
                 'swal' => [
                     'title' => 'Success!',
                     'text' => 'Product updated successfully!',
@@ -177,6 +195,9 @@ class ItemController extends Controller
         }
     }
 
+    /**
+     * Handle image updates (remove or replace).
+     */
     protected function handleImageUpdate($request, $item)
     {
         if ($request->remove_image && $item->image) {
@@ -192,17 +213,20 @@ class ItemController extends Controller
         }
     }
 
+    /**
+     * Delete an item and its image.
+     */
     public function destroy($id)
     {
         try {
             $item = Item::findOrFail($id);
-            
+
             if ($item->image) {
                 Storage::disk('public')->delete($item->image);
             }
-            
+
             $item->delete();
-            
+
             return redirect()->route('items.index')->with([
                 'swal' => [
                     'title' => 'Deleted!',
@@ -210,7 +234,7 @@ class ItemController extends Controller
                     'icon' => 'success'
                 ]
             ]);
-            
+
         } catch (\Exception $e) {
             return redirect()->back()->with([
                 'swal' => [
@@ -222,6 +246,9 @@ class ItemController extends Controller
         }
     }
 
+    /**
+     * Restock an item.
+     */
     public function restock(Request $request, Item $item)
     {
         $request->validate([
@@ -234,6 +261,9 @@ class ItemController extends Controller
         return redirect()->route('items.index')->with('success', 'Product restocked successfully.');
     }
 
+    /**
+     * Sell an item and record the sale.
+     */
     public function sellItem(Request $request)
     {
         $request->validate([
@@ -247,25 +277,27 @@ class ItemController extends Controller
             return back()->with('error', 'Not enough stock.');
         }
 
-        // Create sale
+        // Record sale
         Sale::create([
             'item_id' => $item->id,
             'quantity_sold' => $request->quantity,
         ]);
 
-        // Decrease stock
+        // Reduce stock
         $item->decrement('quantity', $request->quantity);
 
         return back()->with('success', 'Item sold successfully.');
     }
 
+    /**
+     * Show list of most sold items.
+     */
     public function sold()
     {
         $soldItems = Item::withSum('sales as total_sold', 'quantity_sold')
-                        ->orderByDesc('total_sold')
-                        ->paginate(10);
+                         ->orderByDesc('total_sold')
+                         ->paginate(10);
 
         return view('admin.items.sold', compact('soldItems'));
     }
-
 }

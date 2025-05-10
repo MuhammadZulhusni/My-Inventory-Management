@@ -2,7 +2,6 @@
 
 @section('admin')
 
-<!-- Pindahkan ke controller -->
 @php
     use App\Models\Item;
     use App\Models\Sale;
@@ -37,7 +36,7 @@
     $expiringSoonCount = Item::whereBetween('expiry_date', [$today, $sevenDaysLater])
                               ->count();
 
-    // ✅ Fetch total and weekly sold items from Sale table
+    // Fetch total and weekly sold items from Sale table
     $totalItemsSold = Sale::sum('quantity_sold');
     $itemsSoldThisWeek = Sale::where('sold_at', '>=', Carbon::now()->startOfWeek())->sum('quantity_sold');
 @endphp
@@ -541,5 +540,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-
 @endsection

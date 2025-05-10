@@ -468,13 +468,15 @@
                             </td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
-                                    {{-- Edit button --}}
-                                    <a href="{{ route('admin.items.edit', $item->id) }}" 
-                                    class="btn btn-sm btn-outline-primary" 
-                                    data-bs-toggle="tooltip" 
-                                    title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
+                                    {{-- Edit button (only visible on the base admin.items.index route) --}}
+                                    @if(Route::is('items.index') && !request()->hasAny(['stock_status', 'urgent', 'expiring']))
+                                        <a href="{{ route('admin.items.edit', $item->id) }}" 
+                                          class="btn btn-sm btn-outline-primary" 
+                                          data-bs-toggle="tooltip" 
+                                          title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    @endif
 
                                     {{-- Restock link as a button --}}
                                     <a class="btn btn-sm btn-outline-warning" 
