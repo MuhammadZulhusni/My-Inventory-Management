@@ -8,7 +8,7 @@
             <h1 class="mb-2 text-gray-900 font-weight-bold">Profile Settings</h1>
             <nav aria-label="breadcrumb" class="mt-3">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-primary">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}" class="text-decoration-none text-primary">Dashboard</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Profile</li>
                 </ol>
             </nav>
