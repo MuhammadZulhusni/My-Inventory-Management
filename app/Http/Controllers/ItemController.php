@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\Item;
+use App\Models\Sale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Item;
-use Carbon\Carbon;
 
 class ItemController extends Controller
 {
@@ -231,6 +232,40 @@ class ItemController extends Controller
         $item->save();
 
         return redirect()->route('items.index')->with('success', 'Product restocked successfully.');
+    }
+
+    public function sellItem(Request $request)
+    {
+        $request->validate([
+            'item_id' => 'required|exists:items,id',
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        $item = Item::findOrFail($request->item_id);
+
+        if ($item->quantity < $request->quantity) {
+            return back()->with('error', 'Not enough stock.');
+        }
+
+        // Create sale
+        Sale::create([
+            'item_id' => $item->id,
+            'quantity_sold' => $request->quantity,
+        ]);
+
+        // Decrease stock
+        $item->decrement('quantity', $request->quantity);
+
+        return back()->with('success', 'Item sold successfully.');
+    }
+
+    public function sold()
+    {
+        $soldItems = Item::withSum('sales as total_sold', 'quantity_sold')
+                        ->orderByDesc('total_sold')
+                        ->paginate(10);
+
+        return view('admin.items.sold', compact('soldItems'));
     }
 
 }

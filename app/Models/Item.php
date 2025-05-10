@@ -17,4 +17,8 @@ class Item extends Model
         'category',
         'image'
     ];
+    public function sales()
+    {
+        return $this->hasMany(Sale::class);
+    }
 }

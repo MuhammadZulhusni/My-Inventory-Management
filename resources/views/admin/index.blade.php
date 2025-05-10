@@ -2,8 +2,10 @@
 
 @section('admin')
 
+<!-- Pindahkan ke controller -->
 @php
     use App\Models\Item;
+    use App\Models\Sale;
     use Carbon\Carbon;
 
     // Get the authenticated admin's data
@@ -34,6 +36,10 @@
     // Get count of items expiring in the next 7 days
     $expiringSoonCount = Item::whereBetween('expiry_date', [$today, $sevenDaysLater])
                               ->count();
+
+    // ✅ Fetch total and weekly sold items from Sale table
+    $totalItemsSold = Sale::sum('quantity_sold');
+    $itemsSoldThisWeek = Sale::where('sold_at', '>=', Carbon::now()->startOfWeek())->sum('quantity_sold');
 @endphp
 
 @if(request('stock_status') == 'low')
@@ -153,24 +159,25 @@
 
             <div class="col-md-6 col-lg-3">
                 <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #22c55e;">
-                    <div class="card-body p-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="text-muted mb-2" style="font-size: 0.8rem;">ITEM SOLD</h6>
-                                <h3 class="mb-0 count-up" data-target="1240">0</h3>
-                            </div>
-                            <div class="p-2 rounded" style="background-color: #dcfce7;">
-                                <i class="fas fa-shopping-cart text-success" style="font-size: 1.5rem;"></i>
-                            </div>
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2" style="font-size: 0.8rem;">ITEM SOLD</h6>
+                            <h3 class="mb-0 count-up" data-target="{{ $totalItemsSold }}">0</h3>
                         </div>
-                        <div class="mt-2 pt-2 border-top">
-                            <small class="text-muted">
-                                <span class="count-up" data-target="230">0</span> sold this week
-                            </small>
+                        <div class="p-2 rounded" style="background-color: #dcfce7;">
+                            <i class="fas fa-shopping-cart text-success" style="font-size: 1.5rem;"></i>
                         </div>
                     </div>
-                </div>
+                <div class="mt-2 pt-2 border-top">
+                <small class="text-muted">
+                    {{ $itemsSoldThisWeek }} sold this week
+                </small>
             </div>
+        </div>
+    </div>
+</div>
+
         </div>
 
         <!-- Main Content Area -->
@@ -266,7 +273,7 @@
                         </a>
 
                         <!-- Item Sold -->
-                        <a href="#" class="quick-action-card bg-primary bg-opacity-10 text-primary">
+                        <a href="{{ route('items.sold') }}" class="quick-action-card bg-primary bg-opacity-10 text-primary">
                             <div class="action-icon bg-primary text-white">
                                 <i class="fas fa-shopping-cart"></i>
                             </div>
