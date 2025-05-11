@@ -189,7 +189,6 @@
 
 @endsection
 
-<!-- Your Original JavaScript -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.open-sell-modal').forEach(button => {

@@ -22,22 +22,27 @@
     
     <!-- Bootstrap CSS -->
     <link href="{{ asset('backend/assets/css/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" />
-    
-    <!-- Custom CSS -->
+
+    <!-- Global styles -->
     <link href="{{ asset('backend/assets/css/icons.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('backend/assets/css/app.min.css') }}" id="app-style" rel="stylesheet" />
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet" />
-    <link href="{{ asset('css/create.css') }}" rel="stylesheet" />
-    <link href="/css/dashboard.css" rel="stylesheet" />
 
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <!-- Per-page styles -->
+    @stack('styles')
+    
+    <!-- For Header -->
+    <link href="{{ asset('css/header.css') }}" rel="stylesheet" />
 </head>
 
 <body data-topbar="dark">
     <div id="layout-wrapper">
+
         @include('admin.sections.header')
         @yield('admin') 
+        
     </div>
 
     <!-- JAVASCRIPT Libraries -->
@@ -66,6 +71,9 @@
 
     <!-- Custom JS -->
     <script src="{{ asset('js/create.js') }}"></script>
+    <script src="{{ asset('js/index.js') }}"></script>
+    <script src="{{ asset('js/edit.js') }}"></script>
+    <script src="{{ asset('js/indexItem.js') }}"></script>
 
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -155,6 +163,51 @@
                 });
             });
         });
+    </script>
+
+    <!-- Header Logout -->
+    <script>
+    function confirmLogout() {
+        Swal.fire({
+            title: 'Ready to leave?',
+            text: "You're about to sign out from the system.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#00AEEF',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, Logout',
+            cancelButtonText: 'Cancel',
+            background: '#ffffff',
+            backdrop: `
+                rgba(0,174,239,0.1)
+                url("{{ asset('images/logout-animation.gif') }}")
+                left top
+                no-repeat
+            `,
+            showClass: {
+                popup: 'animate__animated animate__fadeInDown'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOutUp'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Create a hidden form and submit it
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route('logout') }}';
+                
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = '{{ csrf_token() }}';
+                
+                form.appendChild(csrfToken);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
+    }
     </script>
 
     <!-- Custom Styles -->

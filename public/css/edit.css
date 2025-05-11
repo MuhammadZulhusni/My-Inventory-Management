@@ -1,0 +1,97 @@
+:root {
+    --primary-color: #4e73df;
+    --primary-hover: #2e59d9;
+    --secondary-color: #858796;
+    --light-gray: #f8f9fc;
+    --border-radius: 10px;
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.card {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+}
+
+.card-header.bg-gradient-primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #224abe 100%);
+    border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    padding: 10px 15px;
+    border: 1px solid #d1d3e2;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+.input-group-text {
+    background-color: var(--light-gray);
+    border-color: #d1d3e2;
+    color: var(--secondary-color);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+.btn-outline-secondary {
+    border-radius: 50px;
+    font-weight: 500;
+    border: 1px solid #d1d3e2;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #f3f4f8;
+}
+
+h6.text-gray-800 {
+    font-size: 1rem;
+    position: relative;
+    padding-bottom: 8px;
+}
+
+h6.text-gray-800:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 30px;
+    height: 2px;
+    background: var(--primary-color);
+    border-radius: 3px;
+}
+
+.breadcrumb {
+    background: transparent;
+    padding: 0;
+    font-size: 0.9rem;
+}
+
+.breadcrumb-item.active {
+    color: var(--secondary-color);
+    font-weight: 500;
+}
+
+.img-thumbnail {
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    padding: 4px;
+    background: white;
+}

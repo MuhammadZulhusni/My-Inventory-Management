@@ -1,5 +1,10 @@
 @extends('admin.admin_dashboard')
+
 @section('admin')
+
+@push('styles')
+    <link href="{{ asset('css/adminProfile.css') }}" rel="stylesheet" />
+@endpush
 
 <div class="container-fluid px-4 px-lg-5 py-4">
     <!-- Page Header -->
@@ -225,194 +230,6 @@
     });
 </script>
 
-<style>
-    :root {
-        --primary-color: #4e73df;
-        --primary-hover: #2e59d9;
-        --secondary-color: #858796;
-        --light-gray: #f8f9fc;
-        --border-radius: 10px;
-        --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    }
-    
-    .card {
-        border: none;
-        border-radius: var(--border-radius);
-        box-shadow: var(--card-shadow);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    }
-    
-    .card-header.bg-gradient-primary {
-        background: linear-gradient(135deg, var(--primary-color) 0%, #224abe 100%);
-        border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
-    }
-    
-    .form-control, .form-select {
-        border-radius: 8px;
-        padding: 10px 15px;
-        border: 1px solid #d1d3e2;
-        transition: all 0.3s ease;
-    }
-    
-    .form-control:focus, .form-select:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
-    }
-    
-    .input-group-text {
-        background-color: var(--light-gray);
-        border-color: #d1d3e2;
-        color: var(--secondary-color);
-    }
-    
-    .btn-primary {
-        background-color: var(--primary-color);
-        border-color: var(--primary-color);
-        padding: 10px 20px;
-        border-radius: 50px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        letter-spacing: 0.5px;
-    }
-    
-    .btn-primary:hover {
-        background-color: var(--primary-hover);
-        border-color: var(--primary-hover);
-        transform: translateY(-1px);
-    }
-    
-    .btn-light {
-        border-radius: 50px;
-        font-weight: 500;
-        border: 1px solid #d1d3e2;
-    }
-    
-    .btn-light:hover {
-        background-color: #f3f4f8;
-    }
-    
-    /* Avatar Upload Styles */
-    .avatar-upload {
-        position: relative;
-        max-width: 140px;
-        margin: 0 auto;
-    }
-    
-    .avatar-edit {
-        position: absolute;
-        right: 5px;
-        bottom: 5px;
-        z-index: 1;
-    }
-    
-    .avatar-edit input {
-        display: none;
-    }
-    
-    .avatar-edit label {
-        display: inline-block;
-        width: 36px;
-        height: 36px;
-        margin-bottom: 0;
-        border-radius: 50%;
-        background: var(--primary-color);
-        border: 3px solid white;
-        cursor: pointer;
-        font-weight: normal;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-    
-    .avatar-edit label:hover {
-        background: var(--primary-hover);
-        transform: scale(1.05);
-    }
-    
-    .avatar-preview {
-        width: 140px;
-        height: 140px;
-        position: relative;
-        border-radius: 50%;
-        border: 5px solid white;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-        background-color: #f8f9fa;
-    }
-    
-    .avatar-preview > div {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-    
-    /* Breadcrumb Styles */
-    .breadcrumb {
-        background: transparent;
-        padding: 0;
-        font-size: 0.9rem;
-    }
-    
-    .breadcrumb-item.active {
-        color: var(--secondary-color);
-        font-weight: 500;
-    }
-    
-    /* Alert Styles */
-    .alert-info {
-        background-color: #f0f7ff;
-        border-color: #cce5ff;
-        color: #004085;
-        border-radius: 8px;
-    }
-    
-    /* Form Label Styles */
-    .form-label {
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
-    }
-    
-    /* Section Header Styles */
-    h5.text-gray-800 {
-        font-size: 1.1rem;
-        position: relative;
-        padding-bottom: 8px;
-    }
-    
-    h5.text-gray-800:after {
-        content: '';
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        width: 40px;
-        height: 3px;
-        background: var(--primary-color);
-        border-radius: 3px;
-    }
-    
-    /* Responsive Adjustments */
-    @media (max-width: 768px) {
-        .avatar-preview {
-            width: 120px;
-            height: 120px;
-        }
-        
-        .avatar-upload {
-            max-width: 120px;
-        }
-    }
-</style>
-
-
 @if(session('success'))
     <script>
         Swal.fire({
@@ -424,6 +241,4 @@
         });
     </script>
 @endif
-
-
 @endsection

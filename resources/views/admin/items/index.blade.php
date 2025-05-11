@@ -2,6 +2,10 @@
 
 @section('admin')
 
+@push('styles')
+    <link href="{{ asset('css/indexItem.css') }}" rel="stylesheet" />
+@endpush
+
 @if ($showExpiringSoonModal)
 <!-- Expiring Soon Modal -->
 <div class="modal fade" id="expiringSoonModal" tabindex="-1" aria-labelledby="expiringSoonModalLabel" aria-hidden="true">
@@ -325,77 +329,100 @@
                         <tr>
                             <!-- Restock Modal -->
                             <div class="modal fade" id="restockModal{{ $item->id }}" tabindex="-1" aria-labelledby="restockModalLabel{{ $item->id }}" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content border-0 shadow-lg">
-                                        <form action="{{ route('items.restock', $item->id) }}" method="POST">
-                                            @csrf
-                                            <!-- Modal Header -->
-                                            <div class="modal-header bg-gradient-primary text-white">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="flex-shrink-0 bg-white bg-opacity-10 p-2 rounded-circle me-3">
-                                                        <i class="ri-archive-line fs-4"></i>
-                                                    </div>
-                                                    <div>
-                                                        <h5 class="modal-title mb-0 text-white" id="restockModalLabel{{ $item->id }}">Restock Product</h5>
-                                                        <p class="small mb-0 opacity-75">Add inventory for {{ $item->name }}</p>
-                                                    </div>
-                                                </div>
-                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            
-                                            <!-- Modal Body -->
-                                            <div class="modal-body">
-                                                <div class="d-flex align-items-center mb-4">
-                                                    @if($item->image)
-                                                        <img src="{{ asset('storage/'.$item->image) }}" alt="{{ $item->name }}" class="rounded-3 me-3" width="60" height="60">
-                                                    @else
-                                                        <div class="bg-light rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px;">
-                                                            <i class="ri-box-3-line text-muted fs-4"></i>
-                                                        </div>
-                                                    @endif
-                                                    <div>
-                                                        <h6 class="mb-1">{{ $item->name }}</h6>
-                                                        <div class="d-flex align-items-center">
-                                                            <span class="badge bg-light text-dark me-2">SKU: {{ $item->sku }}</span>
-                                                            <span class="badge {{ $item->quantity < 5 ? 'bg-danger' : ($item->quantity < 10 ? 'bg-warning text-dark' : 'bg-success') }}">
-                                                                Stock: {{ $item->quantity }}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                              <div class="modal-dialog modal-dialog-centered">
+                                  <div class="modal-content border-0">
+                                      <form action="{{ route('items.restock', $item->id) }}" method="POST">
+                                          @csrf
+                                          
+                                          <!-- Modal Header -->
+                                          <div class="modal-header bg-white border-0 pb-0">
+                                              <div class="w-100">
+                                                  <div class="d-flex align-items-center justify-content-between">
+                                                      <h5 class="modal-title fs-5 fw-bold text-dark" id="restockModalLabel{{ $item->id }}">
+                                                          <i class="ri-add-box-line me-2 text-primary"></i>Restock Inventory
+                                                      </h5>
+                                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                  </div>
+                                                  <p class="text-muted small mt-1">Add quantity to {{ $item->name }}</p>
+                                              </div>
+                                          </div>
+                                          
+                                          <!-- Modal Body -->
+                                          <div class="modal-body pt-0">
+                                              <!-- Product Card -->
+                                              <div class="card border-0 shadow-sm mb-4">
+                                                  <div class="card-body p-3">
+                                                      <div class="d-flex align-items-center">
+                                                          @if($item->image)
+                                                              <img src="{{ asset('storage/'.$item->image) }}" alt="{{ $item->name }}" class="rounded-3 me-3" width="64" height="64" style="object-fit: cover;">
+                                                          @else
+                                                              <div class="bg-light bg-opacity-50 rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 64px; height: 64px;">
+                                                                  <i class="ri-box-3-line text-muted fs-3"></i>
+                                                              </div>
+                                                          @endif
+                                                          <div class="flex-grow-1">
+                                                              <h6 class="mb-1 fw-semibold">{{ $item->name }}</h6>
+                                                              <div class="d-flex flex-wrap gap-2 align-items-center">
+                                                                  <span class="badge bg-light text-dark fs-xs">SKU: {{ $item->sku }}</span>
+                                                                  <span class="badge {{ $item->quantity < 5 ? 'bg-danger' : ($item->quantity < 10 ? 'bg-warning text-dark' : 'bg-success') }} fs-xs">
+                                                                      Current: {{ $item->quantity }} units
+                                                                  </span>
+                                                              </div>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
 
-                                                <div class="mb-3">
-                                                    <label for="quantity{{ $item->id }}" class="form-label fw-semibold">Quantity to Add</label>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text bg-light">
-                                                            <i class="ri-number-1 text-primary"></i>
-                                                        </span>
-                                                        <input type="number" 
-                                                            name="quantity" 
-                                                            id="quantity{{ $item->id }}" 
-                                                            class="form-control form-control-lg"
-                                                            min="1" 
-                                                            value="10"
-                                                            required>
-                                                        <span class="input-group-text bg-light">units</span>
-                                                    </div>
-                                                    <div class="form-text">Current stock will be increased by this amount</div>
-                                                </div>
-                                            </div>
-                                            
-                                            <!-- Modal Footer -->
-                                            <div class="modal-footer border-top-0">
-                                                <button type="button" class="btn btn-light px-4 rounded-pill" data-bs-dismiss="modal">
-                                                    <i class="ri-close-line me-1"></i> Cancel
-                                                </button>
-                                                <button type="submit" class="btn btn-primary px-4 rounded-pill">
-                                                    <i class="ri-add-circle-line me-1"></i> Confirm Restock
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+                                              <!-- Quantity Input -->
+                                              <div class="mb-4">
+                                                  <label for="quantity{{ $item->id }}" class="form-label fw-semibold text-dark mb-2">Quantity to Add</label>
+                                                  <div class="input-group input-group-lg">
+                                                      <button class="btn btn-outline-secondary decrement-btn" type="button">
+                                                          <i class="ri-subtract-line"></i>
+                                                      </button>
+                                                      <input type="number" 
+                                                          name="quantity" 
+                                                          id="quantity{{ $item->id }}" 
+                                                          class="form-control text-center fw-bold"
+                                                          min="1" 
+                                                          value="10"
+                                                          required>
+                                                      <button class="btn btn-outline-secondary increment-btn" type="button">
+                                                          <i class="ri-add-line"></i>
+                                                      </button>
+                                                  </div>
+                                                  <div class="d-flex justify-content-between mt-2">
+                                                      <small class="text-muted">Minimum: 1 unit</small>
+                                                      <small class="text-primary fw-semibold">New total: {{ $item->quantity + 10 }} units</small>
+                                                  </div>
+                                              </div>
+
+                                              <!-- Quick Select Buttons -->
+                                              <div class="mb-3">
+                                                  <label class="form-label text-muted mb-2">Quick Add</label>
+                                                  <div class="d-flex flex-wrap gap-2">
+                                                      <button type="button" class="btn btn-sm btn-outline-primary quick-amount" data-amount="5">+5</button>
+                                                      <button type="button" class="btn btn-sm btn-outline-primary quick-amount" data-amount="10">+10</button>
+                                                      <button type="button" class="btn btn-sm btn-outline-primary quick-amount" data-amount="25">+25</button>
+                                                      <button type="button" class="btn btn-sm btn-outline-primary quick-amount" data-amount="50">+50</button>
+                                                      <button type="button" class="btn btn-sm btn-outline-primary quick-amount" data-amount="100">+100</button>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          
+                                          <!-- Modal Footer -->
+                                          <div class="modal-footer bg-light rounded-bottom-3">
+                                              <button type="button" class="btn btn-light px-4 rounded-1" data-bs-dismiss="modal">
+                                                  <i class="ri-close-line me-1"></i> Cancel
+                                              </button>
+                                              <button type="submit" class="btn btn-primary px-4 rounded-1">
+                                                  <i class="ri-check-line me-1"></i> Confirm Restock
+                                              </button>
+                                          </div>
+                                      </form>
+                                  </div>
+                              </div>
+                          </div>
 
                             <td class="text-center">{{ $items->firstItem() + $index }}</td>
                             <td>
@@ -592,39 +619,6 @@
     </div>
 </div>
 
-<!-- Tooltip initialization -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Bootstrap tooltips
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-    
-    // Reset form functionality
-    document.querySelector('button[type="reset"]').addEventListener('click', function() {
-        // Reset all form inputs
-        const form = this.closest('form');
-        form.querySelector('input[name="search"]').value = '';
-        form.querySelector('select[name="category"]').value = '';
-        form.querySelector('select[name="stock_status"]').value = '';
-        
-        // Submit the form to remove all filters
-        form.submit();
-    });
-});
-
-/* For Restock Hovering */
-document.addEventListener('DOMContentLoaded', function () {
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
-    tooltipTriggerList.forEach(function (el) {
-        new bootstrap.Tooltip(el);
-    });
-});
-
-</script>
-
-
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     @if ($showExpiringSoonModal)
@@ -639,7 +633,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 </script>
 
-
 <!-- Show success message after deletion if session has 'success' -->
 @if(session('success'))
 <script>
@@ -651,218 +644,7 @@ document.addEventListener('DOMContentLoaded', function () {
         showConfirmButton: false
     });
 </script>
+
 @endif
-
-
-<style>
-    .card {
-        border-radius: 10px;
-        overflow: hidden;
-    }
-    
-    .table th {
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        letter-spacing: 0.5px;
-        color: #6c757d;
-        background-color: #f8f9fa;
-        white-space: nowrap;
-    }
-    
-    .table td {
-        vertical-align: middle;
-    }
-    
-    .badge {
-        font-weight: 500;
-        padding: 0.35em 0.65em;
-        font-size: 0.75em;
-        letter-spacing: 0.5px;
-    }
-    
-    .btn-sm {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.75rem;
-    }
-    
-    .breadcrumb {
-        font-size: 0.85rem;
-        margin-bottom: 0;
-    }
-    
-    .breadcrumb-item.active {
-        color: #4a5568;
-    }
-
-    .breadcrumb-item a {
-        color: #0068b7;
-        text-decoration: none;
-    }
-    
-    .breadcrumb-item a:hover {
-        text-decoration: underline;
-    }
-    
-    .font-monospace {
-        font-family: monospace;
-    }
-    
-    .pagination {
-        margin-bottom: 0;
-    }
-    
-    .page-item.active .page-link {
-        background-color: #0068b7;
-        border-color: #0068b7;
-    }
-    
-    .page-link {
-        color: #0068b7;
-    }
-    
-    /* Dropdown filter styling */
-    .dropdown-menu {
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(0, 0, 0, 0.1);
-    }
-    
-    .dropdown-header {
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        color: #6c757d;
-    }
-
-    /* SweetAlert customization */
-    .swal2-popup {
-        border-radius: 12px !important;
-    }
-
-    .swal2-title {
-        font-size: 1.2rem !important;
-    }
-
-    .swal2-confirm {
-        background-color: #dc3545 !important;
-        border-color: #dc3545 !important;
-    }
-
-    .swal2-cancel {
-        background-color: #6c757d !important;
-        border-color: #6c757d !important;
-    }
-
-
-    .modal.fade .modal-dialog {
-        transform: translateY(-20px);
-        opacity: 0;
-        transition: all 0.3s ease-out;
-    }
-    
-    .modal.show .modal-dialog {
-        transform: translateY(0);
-        opacity: 1;
-    }
-    
-    /* Modal Header Gradient */
-    .bg-gradient-primary {
-        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
-        border-radius: 0.3rem 0.3rem 0 0 !important;
-    }
-    
-    /* Input Styling */
-    .form-control-lg {
-        padding: 0.75rem 1rem;
-        font-size: 1.05rem;
-    }
-    
-    /* Button Styling */
-    .btn.rounded-pill {
-        border-radius: 50px !important;
-        transition: all 0.2s ease;
-    }
-    
-    .btn-primary:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(78, 115, 223, 0.3);
-    }
-    
-    /* Badge Styling */
-    .badge {
-        padding: 0.35em 0.65em;
-        font-weight: 500;
-    }
-    
-    /* Product Image Container */
-    .bg-light {
-        background-color: #f8f9fa !important;
-    }
-
-    /* Modal Animation */
-    .modal.fade .modal-dialog {
-    transform: translateY(-20px);
-    opacity: 0;
-    transition: all 0.3s ease-out;
-    }
-
-    .modal.show .modal-dialog {
-    transform: translateY(0);
-    opacity: 1;
-    }
-
-    /* Gradient Headers */
-    .bg-gradient-warning {
-    background: linear-gradient(135deg, #f6c23e 0%, #e0a800 100%);
-    border-radius: 0.3rem 0.3rem 0 0 !important;
-    }
-
-    .bg-gradient-danger {
-    background: linear-gradient(135deg, #e74a3b 0%, #be2617 100%);
-    border-radius: 0.3rem 0.3rem 0 0 !important;
-    }
-
-    /* Alert Styling */
-    .alert {
-    border-left: 4px solid transparent;
-    border-radius: 8px;
-    }
-
-    .alert-warning {
-    border-left-color: #f6c23e;
-    }
-
-    .alert-danger {
-    border-left-color: #e74a3b;
-    }
-
-    /* Table Styling */
-    .table-hover tbody tr:hover {
-    background-color: rgba(0, 0, 0, 0.02);
-    }
-
-    /* Button Styling */
-    .btn.rounded-pill {
-    border-radius: 50px !important;
-    transition: all 0.2s ease;
-    }
-
-    .btn-warning:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(246, 194, 62, 0.3);
-    }
-
-    .btn-danger:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(231, 74, 59, 0.3);
-    }
-
-    /* Badge Styling */
-    .badge {
-    padding: 0.4em 0.75em;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-    }
-</style>
-
 @endsection
+
