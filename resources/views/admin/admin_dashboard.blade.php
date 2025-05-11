@@ -26,9 +26,8 @@
     <!-- Custom CSS -->
     <link href="{{ asset('backend/assets/css/icons.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('backend/assets/css/app.min.css') }}" id="app-style" rel="stylesheet" />
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet" />
     <link href="{{ asset('css/create.css') }}" rel="stylesheet" />
-    <link href="/css/dashboard.css" rel="stylesheet" />
+    <link href="{{ asset('css/index.css') }}" rel="stylesheet" />
 
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -66,6 +65,7 @@
 
     <!-- Custom JS -->
     <script src="{{ asset('js/create.js') }}"></script>
+    <script src="{{ asset('js/index.js') }}"></script>
 
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
