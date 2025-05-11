@@ -27,6 +27,7 @@
     <link href="{{ asset('backend/assets/css/icons.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('backend/assets/css/app.min.css') }}" id="app-style" rel="stylesheet" />
     <link href="{{ asset('css/style.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/create.css') }}" rel="stylesheet" />
     <link href="/css/dashboard.css" rel="stylesheet" />
 
     <!-- jQuery -->
@@ -64,10 +65,7 @@
     <script src="{{ asset('backend/assets/js/app.js') }}"></script>
 
     <!-- Custom JS -->
-    <script src="{{ asset('js/admin_profile.js') }}"></script>
-    <script src="{{ asset('js/add_student.js') }}"></script>
-    <script src="{{ asset('js/subject_combination.js') }}"></script>
-    <script src="{{ asset('js/dashboard.js') }}"></script>
+    <script src="{{ asset('js/create.js') }}"></script>
 
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
