@@ -22,23 +22,27 @@
     
     <!-- Bootstrap CSS -->
     <link href="{{ asset('backend/assets/css/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" />
-    
-    <!-- Custom CSS -->
+
+    <!-- Global styles -->
     <link href="{{ asset('backend/assets/css/icons.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('backend/assets/css/app.min.css') }}" id="app-style" rel="stylesheet" />
-    <link href="{{ asset('css/create.css') }}" rel="stylesheet" />
-    <link href="{{ asset('css/index.css') }}" rel="stylesheet" />
-    <link href="{{ asset('css/adminProfile.css') }}" rel="stylesheet" />
-    <link href="{{ asset('css/header.css') }}" rel="stylesheet" />
 
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <!-- Per-page styles -->
+    @stack('styles')
+    
+    <!-- For Header -->
+    <link href="{{ asset('css/header.css') }}" rel="stylesheet" />
 </head>
 
 <body data-topbar="dark">
     <div id="layout-wrapper">
+
         @include('admin.sections.header')
         @yield('admin') 
+        
     </div>
 
     <!-- JAVASCRIPT Libraries -->
@@ -68,6 +72,8 @@
     <!-- Custom JS -->
     <script src="{{ asset('js/create.js') }}"></script>
     <script src="{{ asset('js/index.js') }}"></script>
+    <script src="{{ asset('js/edit.js') }}"></script>
+    <script src="{{ asset('js/indexItem.js') }}"></script>
 
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

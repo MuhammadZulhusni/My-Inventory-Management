@@ -1,5 +1,10 @@
 @extends('admin.admin_dashboard')
+
 @section('admin')
+
+@push('styles')
+    <link href="{{ asset('css/adminProfile.css') }}" rel="stylesheet" />
+@endpush
 
 <div class="container-fluid px-4 px-lg-5 py-4">
     <!-- Page Header -->

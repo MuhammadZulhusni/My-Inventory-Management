@@ -1,6 +1,11 @@
 @extends('admin.admin_dashboard')
 
 @section('admin')
+
+@push('styles')
+    <link href="{{ asset('css/create.css') }}" rel="stylesheet" />
+@endpush
+
 <div class="container-fluid py-4">
     <!-- Breadcrumbs -->
     <nav aria-label="breadcrumb" class="mb-4">

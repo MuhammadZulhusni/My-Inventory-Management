@@ -1,0 +1,209 @@
+
+.card {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+    background-color: #f8f9fa;
+    white-space: nowrap;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
+    letter-spacing: 0.5px;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+.breadcrumb {
+    font-size: 0.85rem;
+    margin-bottom: 0;
+}
+
+.breadcrumb-item.active {
+    color: #4a5568;
+}
+
+.breadcrumb-item a {
+    color: #0068b7;
+    text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+    text-decoration: underline;
+}
+
+.font-monospace {
+    font-family: monospace;
+}
+
+.pagination {
+    margin-bottom: 0;
+}
+
+.page-item.active .page-link {
+    background-color: #0068b7;
+    border-color: #0068b7;
+}
+
+.page-link {
+    color: #0068b7;
+}
+
+/* Dropdown filter styling */
+.dropdown-menu {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-header {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #6c757d;
+}
+
+/* SweetAlert customization */
+.swal2-popup {
+    border-radius: 12px !important;
+}
+
+.swal2-title {
+    font-size: 1.2rem !important;
+}
+
+.swal2-confirm {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+}
+
+.swal2-cancel {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+}
+
+
+.modal.fade .modal-dialog {
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: all 0.3s ease-out;
+}
+
+.modal.show .modal-dialog {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Modal Header Gradient */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    border-radius: 0.3rem 0.3rem 0 0 !important;
+}
+
+/* Input Styling */
+.form-control-lg {
+    padding: 0.75rem 1rem;
+    font-size: 1.05rem;
+}
+
+/* Button Styling */
+.btn.rounded-pill {
+    border-radius: 50px !important;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(78, 115, 223, 0.3);
+}
+
+/* Badge Styling */
+.badge {
+    padding: 0.35em 0.65em;
+    font-weight: 500;
+}
+
+/* Product Image Container */
+.bg-light {
+    background-color: #f8f9fa !important;
+}
+
+/* Modal Animation */
+.modal.fade .modal-dialog {
+transform: translateY(-20px);
+opacity: 0;
+transition: all 0.3s ease-out;
+}
+
+.modal.show .modal-dialog {
+transform: translateY(0);
+opacity: 1;
+}
+
+/* Gradient Headers */
+.bg-gradient-warning {
+background: linear-gradient(135deg, #f6c23e 0%, #e0a800 100%);
+border-radius: 0.3rem 0.3rem 0 0 !important;
+}
+
+.bg-gradient-danger {
+background: linear-gradient(135deg, #e74a3b 0%, #be2617 100%);
+border-radius: 0.3rem 0.3rem 0 0 !important;
+}
+
+/* Alert Styling */
+.alert {
+border-left: 4px solid transparent;
+border-radius: 8px;
+}
+
+.alert-warning {
+border-left-color: #f6c23e;
+}
+
+.alert-danger {
+border-left-color: #e74a3b;
+}
+
+/* Table Styling */
+.table-hover tbody tr:hover {
+background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Button Styling */
+.btn.rounded-pill {
+border-radius: 50px !important;
+transition: all 0.2s ease;
+}
+
+.btn-warning:hover {
+transform: translateY(-1px);
+box-shadow: 0 4px 8px rgba(246, 194, 62, 0.3);
+}
+
+.btn-danger:hover {
+transform: translateY(-1px);
+box-shadow: 0 4px 8px rgba(231, 74, 59, 0.3);
+}
+
+/* Badge Styling */
+.badge {
+padding: 0.4em 0.75em;
+font-weight: 500;
+letter-spacing: 0.5px;
+}
