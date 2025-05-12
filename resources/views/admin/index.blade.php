@@ -6,6 +6,7 @@
     <link href="{{ asset('css/index.css') }}" rel="stylesheet" />
 @endpush
 
+
 @php
     use App\Models\Item;
     use App\Models\Sale;
@@ -162,24 +163,24 @@
 
             <div class="col-md-6 col-lg-3">
                 <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #22c55e;">
-                <div class="card-body p-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-muted mb-2" style="font-size: 0.8rem;">ITEM SOLD</h6>
-                            <h3 class="mb-0 count-up" data-target="{{ $totalItemsSold }}">0</h3>
+                    <div class="card-body p-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-2" style="font-size: 0.8rem;">ITEM SOLD</h6>
+                                <h3 class="mb-0 count-up" data-target="{{ $totalItemsSold }}">0</h3>
+                            </div>
+                            <div class="p-2 rounded" style="background-color: #dcfce7;">
+                                <i class="fas fa-shopping-cart text-success" style="font-size: 1.5rem;"></i>
+                            </div>
                         </div>
-                        <div class="p-2 rounded" style="background-color: #dcfce7;">
-                            <i class="fas fa-shopping-cart text-success" style="font-size: 1.5rem;"></i>
-                        </div>
-                    </div>
-                <div class="mt-2 pt-2 border-top">
-                <small class="text-muted">
-                    {{ $itemsSoldThisWeek }} sold this week
-                </small>
+                    <div class="mt-2 pt-2 border-top">
+                    <small class="text-muted">
+                        {{ $itemsSoldThisWeek }} sold this week
+                    </small>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
         </div>
 
@@ -190,21 +191,46 @@
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-header bg-white border-0 py-3">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0" style="font-weight: 600;">Inventory Movement</h5>
-                        <div class="dropdown">
-                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="chartDropdown" data-bs-toggle="dropdown">
-                                Last 30 Days
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Last 7 Days</a></li>
-                                <li><a class="dropdown-item" href="#">Last 30 Days</a></li>
-                                <li><a class="dropdown-item" href="#">Last 90 Days</a></li>
-                            </ul>
-                        </div>
+                        <h5 class="mb-0" style="font-weight: 600;">Inventory Overview</h5>
                     </div>
                 </div>
                 <div class="card-body">
                     <canvas id="inventoryChart" height="250"></canvas>
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                const ctx = document.getElementById('inventoryChart').getContext('2d');
+                                const inventoryChart = new Chart(ctx, {
+                                    type: 'polarArea',
+                                    data: {
+                                        labels: ['Total Items', 'Low Stock', 'Expiring Soon', 'Item Sold'],
+                                        datasets: [{
+                                            label: 'Inventory Overview',
+                                            data: [
+                                                {{ $totalItems }},
+                                                {{ $lowStockCount }},
+                                                {{ $expiringSoonCount }},
+                                                {{ $totalItemsSold }}
+                                            ],
+                                            backgroundColor: [
+                                                'rgba(0, 104, 183, 0.7)',   // Blue
+                                                'rgba(0, 166, 80, 0.7)',    // Green
+                                                'rgba(255, 130, 0, 0.7)',   // Orange
+                                                'rgba(34, 197, 94, 0.7)'    // Light Green
+                                            ],
+                                            borderWidth: 1
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        plugins: {
+                                            legend: {
+                                                position: 'right',
+                                            }
+                                        }
+                                    }
+                                });
+                            });
+                        </script>
                 </div>
             </div>
         </div>
@@ -364,3 +390,7 @@
     </div>
 </div>
 @endsection
+
+
+
+
