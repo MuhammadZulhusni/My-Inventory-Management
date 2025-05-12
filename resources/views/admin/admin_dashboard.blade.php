@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>Family Mart Inventory</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+    <meta content="Premium Multipurpose Admin & Dashboard" name="description" />
     <meta content="Themesdesign" name="author" />
     <link rel="shortcut icon" href="{{ asset('uploads/icon.jpeg') }}">
 
@@ -27,9 +27,6 @@
     <link href="{{ asset('backend/assets/css/icons.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('backend/assets/css/app.min.css') }}" id="app-style" rel="stylesheet" />
 
-    <!-- jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
     <!-- Per-page styles -->
     @stack('styles')
     
@@ -44,6 +41,12 @@
         @yield('admin') 
         
     </div>
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- JAVASCRIPT Libraries -->
     <script src="{{ asset('backend/assets/libs/jquery/jquery.min.js') }}"></script>
@@ -78,9 +81,6 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.rawgit.com/mhuggins/countUp.js/master/dist/countUp.min.js"></script>
-
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Session Alerts -->
     @if(session('success'))
