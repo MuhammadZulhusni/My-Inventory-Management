@@ -6,7 +6,6 @@
     <link href="{{ asset('css/index.css') }}" rel="stylesheet" />
 @endpush
 
-
 @php
     use App\Models\Item;
     use App\Models\Sale;
