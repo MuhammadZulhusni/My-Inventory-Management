@@ -11,21 +11,6 @@ use Carbon\Carbon;
 class ItemController extends Controller
 {
     /**
-     * Show dashboard summary with item stats.
-     */
-    public function dashboardSummary()
-    {
-        $totalItems = Item::count();
-        $lastWeekItems = Item::whereBetween('created_at', [now()->subWeek(), now()])->count();
-        $growth = $lastWeekItems > 0 ? round((($totalItems - $lastWeekItems) / $lastWeekItems) * 100) : 0;
-        $lowStockCount = Item::where('quantity', '<', 10)->count();
-        $urgentRestockCount = Item::where('quantity', '<', 5)->count();
-        $expiringSoonCount = Item::whereBetween('expiry_date', [now(), now()->addDays(7)])->count();
-
-        return view('admin.dashboard', compact('totalItems', 'growth', 'lowStockCount', 'urgentRestockCount', 'expiringSoonCount'));
-    }
-
-    /**
      * Display a listing of items with optional filters.
      */
     public function index(Request $request)
