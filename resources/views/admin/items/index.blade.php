@@ -327,119 +327,26 @@
                     <tbody>
                         @forelse ($items as $index => $item)
                         <tr>
-                            <!-- Restock Modal -->
-                            <div class="modal fade" id="restockModal{{ $item->id }}" tabindex="-1" aria-labelledby="restockModalLabel{{ $item->id }}" aria-hidden="true">
-                              <div class="modal-dialog modal-dialog-centered">
-                                  <div class="modal-content border-0">
-                                      <form action="{{ route('items.restock', $item->id) }}" method="POST">
-                                          @csrf
-                                          
-                                          <!-- Modal Header -->
-                                          <div class="modal-header bg-white border-0 pb-0">
-                                              <div class="w-100">
-                                                  <div class="d-flex align-items-center justify-content-between">
-                                                      <h5 class="modal-title fs-5 fw-bold text-dark" id="restockModalLabel{{ $item->id }}">
-                                                          <i class="ri-add-box-line me-2 text-primary"></i>Restock Inventory
-                                                      </h5>
-                                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                  </div>
-                                                  <p class="text-muted small mt-1">Add quantity to {{ $item->name }}</p>
-                                              </div>
-                                          </div>
-                                          
-                                          <!-- Modal Body -->
-                                          <div class="modal-body pt-0">
-                                              <!-- Product Card -->
-                                              <div class="card border-0 shadow-sm mb-4">
-                                                  <div class="card-body p-3">
-                                                      <div class="d-flex align-items-center">
-                                                          @if($item->image)
-                                                              <img src="{{ asset('storage/'.$item->image) }}" alt="{{ $item->name }}" class="rounded-3 me-3" width="64" height="64" style="object-fit: cover;">
-                                                          @else
-                                                              <div class="bg-light bg-opacity-50 rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 64px; height: 64px;">
-                                                                  <i class="ri-box-3-line text-muted fs-3"></i>
-                                                              </div>
-                                                          @endif
-                                                          <div class="flex-grow-1">
-                                                              <h6 class="mb-1 fw-semibold">{{ $item->name }}</h6>
-                                                              <div class="d-flex flex-wrap gap-2 align-items-center">
-                                                                  <span class="badge bg-light text-dark fs-xs">SKU: {{ $item->sku }}</span>
-                                                                  <span class="badge {{ $item->quantity < 5 ? 'bg-danger' : ($item->quantity < 10 ? 'bg-warning text-dark' : 'bg-success') }} fs-xs">
-                                                                      Current: {{ $item->quantity }} units
-                                                                  </span>
-                                                              </div>
-                                                          </div>
-                                                      </div>
-                                                  </div>
-                                              </div>
 
-                                              <!-- Quantity Input -->
-                                              <div class="mb-4">
-                                                  <label for="quantity{{ $item->id }}" class="form-label fw-semibold text-dark mb-2">Quantity to Add</label>
-                                                  <div class="input-group input-group-lg">
-                                                      <button class="btn btn-outline-secondary decrement-btn" type="button">
-                                                          <i class="ri-subtract-line"></i>
-                                                      </button>
-                                                      <input type="number" 
-                                                          name="quantity" 
-                                                          id="quantity{{ $item->id }}" 
-                                                          class="form-control text-center fw-bold"
-                                                          min="1" 
-                                                          value="10"
-                                                          required>
-                                                      <button class="btn btn-outline-secondary increment-btn" type="button">
-                                                          <i class="ri-add-line"></i>
-                                                      </button>
-                                                  </div>
-                                                  <div class="d-flex justify-content-between mt-2">
-                                                      <small class="text-muted">Minimum: 1 unit</small>
-                                                      <small class="text-primary fw-semibold">New total: {{ $item->quantity + 10 }} units</small>
-                                                  </div>
-                                              </div>
-
-                                              <!-- Quick Select Buttons -->
-                                              <div class="mb-3">
-                                                  <label class="form-label text-muted mb-2">Quick Add</label>
-                                                  <div class="d-flex flex-wrap gap-2">
-                                                      <button type="button" class="btn btn-sm btn-outline-primary quick-amount" data-amount="5">+5</button>
-                                                      <button type="button" class="btn btn-sm btn-outline-primary quick-amount" data-amount="10">+10</button>
-                                                      <button type="button" class="btn btn-sm btn-outline-primary quick-amount" data-amount="25">+25</button>
-                                                      <button type="button" class="btn btn-sm btn-outline-primary quick-amount" data-amount="50">+50</button>
-                                                      <button type="button" class="btn btn-sm btn-outline-primary quick-amount" data-amount="100">+100</button>
-                                                  </div>
-                                              </div>
-                                          </div>
-                                          
-                                          <!-- Modal Footer -->
-                                          <div class="modal-footer bg-light rounded-bottom-3">
-                                              <button type="button" class="btn btn-light px-4 rounded-1" data-bs-dismiss="modal">
-                                                  <i class="ri-close-line me-1"></i> Cancel
-                                              </button>
-                                              <button type="submit" class="btn btn-primary px-4 rounded-1">
-                                                  <i class="ri-check-line me-1"></i> Confirm Restock
-                                              </button>
-                                          </div>
-                                      </form>
-                                  </div>
-                              </div>
-                          </div>
-
+                            <!-- Modal file -->
+                            @include('admin.restock-modal', ['item' => $item])
+                            
                             <td class="text-center">{{ $items->firstItem() + $index }}</td>
                             <td>
-                                <div class="d-flex align-items-center">
-                                    @php
-                                        $imagePath = public_path('storage/' . $item->image);
-                                        $imageUrl = (!empty($item->image) && file_exists($imagePath))
-                                            ? asset('storage/' . $item->image)
-                                            : asset('uploads/no-item.png');
-                                    @endphp
+                                    <div class="d-flex align-items-center">
+                                      @php
+                                          $imagePath = public_path('storage/' . $item->image);
+                                          $imageUrl = (!empty($item->image) && file_exists($imagePath))
+                                              ? asset('storage/' . $item->image)
+                                              : asset('uploads/no-item.png');
+                                      @endphp
 
-                                    <div class="flex-shrink-0 me-3">
-                                        <img src="{{ $imageUrl }}" 
-                                            alt="{{ $item->name }}" 
-                                            class="rounded" 
-                                            width="40" 
-                                            height="40">
+                                      <div class="flex-shrink-0 me-3">
+                                          <img src="{{ $imageUrl }}" 
+                                              alt="{{ $item->name }}" 
+                                              class="rounded" 
+                                              width="40" 
+                                              height="40">
                                     </div>
                                     <div class="flex-grow-1">
                                         <h6 class="mb-0">{{ $item->name }}</h6>
@@ -505,14 +412,13 @@
                                         </a>
                                     @endif
 
-                                    {{-- Restock link as a button --}}
+                                    <!-- Restock Link as a Button -->
                                     <a class="btn btn-sm btn-outline-warning" 
-                                        title="Restock" 
-                                        data-bs-target="#restockModal{{ $item->id }}" 
-                                        data-bs-toggle="modal">
-                                        <i class="fas fa-plus"></i>
+                                      title="Restock" 
+                                      data-bs-toggle="modal" 
+                                      data-bs-target="#restockModal{{ $item->id }}">
+                                      <i class="fas fa-plus"></i>
                                     </a>
-
 
                                     {{-- Delete button --}}
                                     <form action="{{ route('items.destroy', $item->id) }}" method="POST" class="delete-form">
