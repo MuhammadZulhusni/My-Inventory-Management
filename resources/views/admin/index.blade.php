@@ -49,6 +49,22 @@
                          ->orderBy('quantity')
                          ->limit(5)
                          ->get();
+
+    // Get the most frequent category ID from items table
+    $topCategoryId = Item::select('category')
+        ->groupBy('category')
+        ->orderByRaw('COUNT(*) DESC')
+        ->limit(1)
+        ->pluck('category')
+        ->first();
+
+    // Convert category ID to readable name
+    $topCategory = match ($topCategoryId) {
+        1 => 'Beverages',
+        2 => 'Food',
+        3 => 'Frozen',
+        default => 'Unknown'
+    };
 @endphp
 
 @if(request('stock_status') == 'low')
@@ -114,9 +130,9 @@
                             </div>
                         </div>
                         <div class="mt-2 pt-2 border-top">
-                            <small class="{{ $growth >= 0 ? 'text-success' : 'text-danger' }}">
-                                <i class="fas {{ $growth >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }}"></i> 
-                                <span class="count-up" data-target="{{ $growth }}">0</span>% from last week
+                            <small class="text-muted">
+                                <i class="fas fa-tag text-primary"></i>
+                                Most Category in Products: <strong>{{ $topCategory }}</strong>
                             </small>
                         </div>
                     </div>
