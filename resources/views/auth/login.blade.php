@@ -116,21 +116,16 @@
                     @enderror
                 </div>
 
-                <!-- Remember Me & Forgot Password -->
-                <!-- <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <input id="remember" name="remember" type="checkbox" 
-                               class="h-4 w-4 text-familymart focus:ring-familymart-light border-gray-300 rounded">
-                        <label for="remember" class="ml-2 block text-sm text-gray-700">
-                            Remember me
-                        </label>
-                    </div>
-                    <div class="text-sm">
-                        <a href="#" class="font-medium text-familymart hover:text-familymart-dark">
+                <!-- Forgot Password -->
+                <div class="flex justify-between items-center text-sm">
+                    <label class="inline-flex items-center">
+                    </label>
+                    @if (Route::has('password.request'))
+                        <a href="{{ route('password.request') }}" class="text-familymart hover:underline">
                             Forgot password?
                         </a>
-                    </div>
-                </div> -->
+                    @endif
+                </div>
 
                 <!-- Submit Button -->
                 <button type="submit"

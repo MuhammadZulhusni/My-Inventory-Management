@@ -1,39 +1,83 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('password.store') }}">
-        @csrf
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="shortcut icon" href="{{ asset('uploads/icon.jpeg') }}">
+  <title>Reset Password</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen px-4">
+  <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
+    <h1 class="text-3xl font-extrabold text-gray-900 mb-6 text-center">
+      Reset Your Password
+    </h1>
 
-        <!-- Password Reset Token -->
-        <input type="hidden" name="token" value="{{ $request->route('token') }}">
+    <form method="POST" action="{{ route('password.store') }}" class="space-y-6">
+      @csrf
+      <!-- Password Reset Token -->
+      <input type="hidden" name="token" value="{{ $request->route('token') }}" />
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+      <!-- Email Address -->
+      <div>
+        <label for="email" class="block text-gray-700 font-medium mb-2">Email Address</label>
+        <input
+          id="email"
+          type="email"
+          name="email"
+          value="{{ old('email', $request->email) }}"
+          required
+          autofocus
+          autocomplete="username"
+          placeholder="you@example.com"
+          class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+        />
+        @error('email')
+          <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+        @enderror
+      </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+      <!-- Password -->
+      <div>
+        <label for="password" class="block text-gray-700 font-medium mb-2">New Password</label>
+        <input
+          id="password"
+          type="password"
+          name="password"
+          required
+          autocomplete="new-password"
+          placeholder="********"
+          class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+        />
+        @error('password')
+          <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+        @enderror
+      </div>
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+      <!-- Confirm Password -->
+      <div>
+        <label for="password_confirmation" class="block text-gray-700 font-medium mb-2">Confirm Password</label>
+        <input
+          id="password_confirmation"
+          type="password"
+          name="password_confirmation"
+          required
+          autocomplete="new-password"
+          placeholder="********"
+          class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+        />
+        @error('password_confirmation')
+          <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+        @enderror
+      </div>
 
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                type="password"
-                                name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Reset Password') }}
-            </x-primary-button>
-        </div>
+      <button
+        type="submit"
+        class="w-full py-3 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 transition"
+      >
+        Reset Password
+      </button>
     </form>
-</x-guest-layout>
+  </div>
+</body>
+</html>
