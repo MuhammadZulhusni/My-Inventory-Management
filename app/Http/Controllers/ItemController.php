@@ -266,6 +266,7 @@ class ItemController extends Controller
         Sale::create([
             'item_id' => $item->id,
             'quantity_sold' => $request->quantity,
+            'sold_at' => Carbon::now(),
         ]);
 
         // Reduce stock

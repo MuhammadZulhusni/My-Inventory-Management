@@ -42,7 +42,6 @@
 
     // Fetch total and weekly sold items from Sale table
     $totalItemsSold = Sale::sum('quantity_sold');
-    $itemsSoldThisWeek = Sale::where('sold_at', '>=', Carbon::now()->startOfWeek())->sum('quantity_sold');
 
     // Fetch 5 low stock items 
     $lowStockItems = Item::where('quantity', '<', 10)
@@ -65,6 +64,10 @@
         3 => 'Frozen',
         default => 'Unknown'
     };
+
+    // Get count of items sold today
+    $itemsSoldToday = Sale::whereDate('sold_at', Carbon::today())->sum('quantity_sold');
+
 @endphp
 
 @if(request('stock_status') == 'low')
@@ -194,14 +197,16 @@
                                 <i class="fas fa-shopping-cart text-success" style="font-size: 1.5rem;"></i>
                             </div>
                         </div>
-                    <div class="mt-2 pt-2 border-top">
-                    <small class="text-muted">
-                        {{ $itemsSoldThisWeek }} sold this week
-                    </small>
+                        <div class="mt-2 pt-2 border-top">
+                            <small class="text-muted">
+                                <i class="fas fa-shopping-cart me-1"></i> 
+                                {{ $itemsSoldToday }} sold today
+                            </small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
         </div>
 
@@ -354,48 +359,44 @@
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table align-middle table-hover mb-0">
+                            <table class="table table-hover align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th style="width: 50px;"></th>
-                                        <th>Item</th>
-                                        <th>Category</th>
-                                        <th>Current Stock</th>
-                                        <th>Threshold</th>
-                                        <th>Status</th>
-                                        <th class="text-center">Action</th>
+                                        <th scope="col" style="width: 60px;"></th>
+                                        <th scope="col">Item</th>
+                                        <th scope="col">Category</th>
+                                        <th scope="col">Stock</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col" class="text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse($lowStockItems as $item)
                                         <tr>
                                             <td>
-                                                <div class="d-flex align-items-center">
                                                 @php
                                                     $imagePath = public_path('storage/' . $item->image);
                                                     $imageUrl = (!empty($item->image) && file_exists($imagePath))
                                                         ? asset('storage/' . $item->image)
                                                         : asset('uploads/no-item.png');
                                                 @endphp
-
-                                                <div class="flex-shrink-0 me-3">
-                                                    <img src="{{ $imageUrl }}" 
-                                                        alt="{{ $item->name }}" 
-                                                        class="rounded" 
-                                                        width="40" 
-                                                        height="40">
+                                                <img src="{{ $imageUrl }}" 
+                                                    alt="{{ $item->name }}" 
+                                                    class="rounded border" 
+                                                    width="50" 
+                                                    height="50">
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <strong class="text-dark">{{ $item->name }}</strong><br>
+                                                    <small class="text-muted">SKU: {{ $item->sku }}</small>
                                                 </div>
                                             </td>
                                             <td>
-                                                <strong class="d-block text-dark">{{ $item->name }}</strong>
-                                                <small class="text-muted">SKU: {{ $item->sku }}</small>
-                                            </td>
-                                            <td>{{ $item->category }}</td>
-                                            <td>
-                                                <span class="fw-semibold text-dark">{{ $item->quantity }}</span> units
+                                                <span class="badge bg-secondary">{{ $item->category }}</span>
                                             </td>
                                             <td>
-                                                <span class="text-muted">10</span>
+                                                <span class="fw-bold text-dark">{{ $item->quantity }}</span> units
                                             </td>
                                             <td>
                                                 @if($item->quantity < 5)
@@ -404,22 +405,19 @@
                                                     <span class="badge bg-warning text-dark">Low</span>
                                                 @endif
                                             </td>
-                                            <td>
-                                                <div class="d-flex justify-content-center">
-                                                    <button class="btn btn-sm btn-outline-primary"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#restockModal{{ $item->id }}">
-                                                        <i class="ri-add-box-line me-1"></i> Restock
-                                                    </button>
-                                                </div>
-
+                                            <td class="text-center">
+                                                <button class="btn btn-sm btn-outline-primary"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#restockModal{{ $item->id }}">
+                                                    <i class="ri-add-box-line me-1"></i> Restock
+                                                </button>
                                                 @include('admin.restock-modal', ['item' => $item])
                                             </td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="7" class="text-center text-muted py-4">
-                                                <i class="ri-inbox-line fs-4 mb-2 d-block"></i>
+                                            <td colspan="6" class="text-center text-muted py-4">
+                                                <i class="ri-inbox-line fs-3 d-block mb-2"></i>
                                                 No low stock items.
                                             </td>
                                         </tr>
