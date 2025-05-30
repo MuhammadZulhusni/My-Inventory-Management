@@ -4,80 +4,187 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="shortcut icon" href="{{ asset('uploads/icon.png') }}">
-  <title>Reset Password</title>
+  <title>Reset Password | Inventory Management</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              DEFAULT: '#3B82F6',
+              light: '#93C5FD',
+              dark: '#1D4ED8'
+            },
+            accent: '#10B981'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif']
+          },
+          boxShadow: {
+            'soft': '0 10px 30px -15px rgba(0, 0, 0, 0.1)',
+            'hard': '0 4px 20px -5px rgba(59, 130, 246, 0.2)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+    .bg-auth {
+      background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%233B82F6' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E"),
+              linear-gradient(to bottom right, #f8f9fa, #ffffff);
+    }
+    .input-focus:focus {
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+  </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen px-4">
-  <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
-    <h1 class="text-3xl font-extrabold text-gray-900 mb-6 text-center">
-      Reset Your Password
-    </h1>
 
-    <form method="POST" action="{{ route('password.store') }}" class="space-y-6">
-      @csrf
-      <!-- Password Reset Token -->
-      <input type="hidden" name="token" value="{{ $request->route('token') }}" />
+<body class="font-sans bg-auth min-h-screen flex items-center justify-center p-4">
+  <!-- Decorative Elements -->
+  <div class="fixed top-10 left-10 w-32 h-32 rounded-full bg-primary-light opacity-10 -z-10 animate-float"></div>
+  <div class="fixed bottom-20 right-20 w-40 h-40 rounded-full bg-primary-light opacity-10 -z-10 animate-float" style="animation-delay: 2s;"></div>
+  <div class="fixed top-1/3 right-1/4 w-24 h-24 rounded-full bg-accent opacity-10 -z-10 animate-float" style="animation-delay: 4s;"></div>
 
-      <!-- Email Address -->
-      <div>
-        <label for="email" class="block text-gray-700 font-medium mb-2">Email Address</label>
-        <input
-          id="email"
-          type="email"
-          name="email"
-          value="{{ old('email', $request->email) }}"
-          required
-          autofocus
-          autocomplete="username"
-          placeholder="you@example.com"
-          class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-        />
-        @error('email')
-          <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-        @enderror
+  <div class="w-full max-w-md">
+    <!-- Reset Password Card -->
+    <div class="bg-white rounded-xl shadow-hard overflow-hidden transition-all duration-300 hover:shadow-xl">
+      <!-- Brand Header -->
+      <div class="bg-primary py-4 px-6 text-center">
+        <div class="inline-flex items-center justify-center bg-white p-3 rounded-full">
+          <i class="fas fa-key text-primary text-2xl"></i>
+        </div>
+        <h1 class="text-white text-xl font-bold mt-2">Reset Password</h1>
+        <p class="text-primary-light text-sm mt-1">Inventory Management System</p>
       </div>
+      
+      <!-- Reset Password Form -->
+      <form method="POST" action="{{ route('password.store') }}" class="p-6 space-y-6">
+        @csrf
+        <!-- Password Reset Token -->
+        <input type="hidden" name="token" value="{{ $request->route('token') }}" />
 
-      <!-- Password -->
-      <div>
-        <label for="password" class="block text-gray-700 font-medium mb-2">New Password</label>
-        <input
-          id="password"
-          type="password"
-          name="password"
-          required
-          autocomplete="new-password"
-          placeholder="********"
-          class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-        />
-        @error('password')
-          <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-        @enderror
+        <!-- Email Address -->
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">
+            <i class="fas fa-envelope mr-1 text-primary"></i> Email Address
+          </label>
+          <div class="relative">
+            <input
+              id="email"
+              type="email"
+              name="email"
+              value="{{ old('email', $request->email) }}"
+              required
+              autofocus
+              autocomplete="username"
+              placeholder="you@example.com"
+              class="w-full px-4 py-3 pl-10 border border-gray-200 rounded-lg input-focus transition-all duration-200
+                    focus:border-primary focus:ring-1 focus:ring-primary-light"
+            />
+            <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+          </div>
+          @error('email')
+            <p class="mt-1 text-sm text-red-600 flex items-center">
+              <i class="fas fa-exclamation-circle mr-1"></i> {{ $message }}
+            </p>
+          @enderror
+        </div>
+
+        <!-- New Password -->
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">
+            <i class="fas fa-lock mr-1 text-primary"></i> New Password
+          </label>
+          <div class="relative">
+            <input
+              id="password"
+              type="password"
+              name="password"
+              required
+              autocomplete="new-password"
+              placeholder="••••••••"
+              class="w-full px-4 py-3 pl-10 border border-gray-200 rounded-lg input-focus transition-all duration-200
+                    focus:border-primary focus:ring-1 focus:ring-primary-light"
+            />
+            <i class="fas fa-key absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+          </div>
+          @error('password')
+            <p class="mt-1 text-sm text-red-600 flex items-center">
+              <i class="fas fa-exclamation-circle mr-1"></i> {{ $message }}
+            </p>
+          @enderror
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">
+            <i class="fas fa-lock mr-1 text-primary"></i> Confirm Password
+          </label>
+          <div class="relative">
+            <input
+              id="password_confirmation"
+              type="password"
+              name="password_confirmation"
+              required
+              autocomplete="new-password"
+              placeholder="••••••••"
+              class="w-full px-4 py-3 pl-10 border border-gray-200 rounded-lg input-focus transition-all duration-200
+                    focus:border-primary focus:ring-1 focus:ring-primary-light"
+            />
+            <i class="fas fa-key absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+          </div>
+          @error('password_confirmation')
+            <p class="mt-1 text-sm text-red-600 flex items-center">
+              <i class="fas fa-exclamation-circle mr-1"></i> {{ $message }}
+            </p>
+          @enderror
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="w-full bg-primary hover:bg-primary-dark text-white font-semibold 
+                py-3 px-4 rounded-lg transition duration-300 ease-in-out transform 
+                hover:scale-[1.02] active:scale-[0.98] shadow-md flex items-center justify-center"
+        >
+          <i class="fas fa-sync-alt mr-2"></i> Reset Password
+        </button>
+      </form>
+
+      <!-- Footer -->
+      <div class="bg-gray-50 px-6 py-4 text-center border-t border-gray-100">
+        <p class="text-xs text-gray-500">
+          <i class="fas fa-shield-alt mr-1 text-primary"></i> Secure password reset
+        </p>
+        <p class="text-xs text-gray-400 mt-1">
+          Remember your password? <a href="/login" class="text-primary hover:underline">Login here</a>
+        </p>
       </div>
+    </div>
 
-      <!-- Confirm Password -->
-      <div>
-        <label for="password_confirmation" class="block text-gray-700 font-medium mb-2">Confirm Password</label>
-        <input
-          id="password_confirmation"
-          type="password"
-          name="password_confirmation"
-          required
-          autocomplete="new-password"
-          placeholder="********"
-          class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-        />
-        @error('password_confirmation')
-          <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-        @enderror
+    <!-- System Status -->
+    <div class="mt-4 text-center">
+      <div class="inline-flex items-center text-xs text-gray-500 bg-white rounded-full px-3 py-1 shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
+        System status: Operational
       </div>
-
-      <button
-        type="submit"
-        class="w-full py-3 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 transition"
-      >
-        Reset Password
-      </button>
-    </form>
+    </div>
   </div>
 </body>
 </html>
