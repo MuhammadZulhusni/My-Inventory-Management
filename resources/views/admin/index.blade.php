@@ -26,7 +26,7 @@
     $yesterdayCount = Item::whereDate('created_at', $yesterday)->count();
 
     // Calculate growth percentage
-    $growth = $yesterdayCount > 0 ? round((($todayCount - $yesterdayCount) / $yesterdayCount) * 100) : ($todayCount > 0 ? 100 : 0);
+$growth = $yesterdayCount > 0 ? round((($todayCount - $yesterdayCount) / $yesterdayCount) * 100) : ($todayCount > 0 ? 100 : 0);
 
     // Fetch low stock items (below 10) and urgent restock (below 5)
     $lowStockCount = Item::where('quantity', '<', 10)->count();
@@ -67,6 +67,20 @@
 
     // Get count of items sold today
     $itemsSoldToday = Sale::whereDate('sold_at', Carbon::today())->sum('quantity_sold');
+
+    $dates = collect();
+    $itemsAdded = collect();
+    $itemsSold = collect();
+    $lowStock = collect();
+
+    for ($i = 6; $i >= 0; $i--) {
+        $date = Carbon::today()->subDays($i);
+        $dates->push($date->format('M d'));
+        
+        $itemsAdded->push(Item::whereDate('created_at', $date)->count());
+        $itemsSold->push(Sale::whereDate('sold_at', $date)->sum('quantity_sold'));
+        $lowStock->push(Item::where('quantity', '<', 10)->whereDate('updated_at', '<=', $date)->count());
+    }
 @endphp
 
 <div class="dashboard-content">
@@ -199,10 +213,12 @@
             <div class="col-lg-8">
                 <div class="card h-100">
                     <div class="card-header bg-white border-0">
-                        <h5 class="mb-0 fw-bold">Inventory Overview</h5>
+                        <h5 class="mb-0 fw-bold">Inventory Overview (Last 7 Days)</h5>
                     </div>
                     <div class="card-body pt-0">
-                        <canvas id="inventoryChart" height="250"></canvas>
+                        <div class="chart-container">
+                            <div id="chart"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -360,144 +376,175 @@
     </div>
 </div>
 
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Initialize Chart with real data
-        const ctx = document.getElementById('inventoryChart').getContext('2d');
-        
-        // Fetch data from server (alternative approach)
-        const chartData = {
-            totalItems: {{ $totalItems }},
-            lowStockCount: {{ $lowStockCount }},
-            expiringSoonCount: {{ $expiringSoonCount }},
-            totalItemsSold: {{ $totalItemsSold }}
-        };
+<!-- Include ApexCharts CDN -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
-        // Create a bar chart instead of doughnut for better data comparison
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Total Items', 'Low Stock', 'Expiring Soon', 'Items Sold'],
-                datasets: [{
-                    label: 'Inventory Metrics',
-                    data: [
-                        chartData.totalItems,
-                        chartData.lowStockCount,
-                        chartData.expiringSoonCount,
-                        chartData.totalItemsSold
-                    ],
-                    backgroundColor: [
-                        'rgba(67, 97, 238, 0.7)',
-                        'rgba(248, 150, 30, 0.7)',
-                        'rgba(247, 37, 133, 0.7)',
-                        'rgba(76, 201, 240, 0.7)'
-                    ],
-                    borderColor: [
-                        'rgba(67, 97, 238, 1)',
-                        'rgba(248, 150, 30, 1)',
-                        'rgba(247, 37, 133, 1)',
-                        'rgba(76, 201, 240, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.parsed.y.toLocaleString();
-                            }
-                        }
-                    }
+<!-- Include ApexCharts CDN -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    var options = {
+        series: [{
+            name: 'Items Added',
+            data: @json($itemsAdded)
+        }, {
+            name: 'Items Sold',
+            data: @json($itemsSold)
+        }],
+        chart: {
+            type: 'area',
+            height: 350,
+            toolbar: {
+                show: true,
+                tools: {
+                    download: true,
+                    selection: false,
+                    zoom: true,
+                    zoomin: false,
+                    zoomout: false,
+                    pan: false,
+                    reset: false
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return value.toLocaleString();
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        // Alternative: Time-based chart for sales data
-        // This would require additional data from your controller
-        @if(false) // Change to true if you want to implement time-based chart
-        const salesCtx = document.getElementById('salesChart').getContext('2d');
-        
-        // Example data - replace with actual data from your controller
-        const salesData = {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-            data: [120, 190, 170, 210, 230, 250]
-        };
-        
-        new Chart(salesCtx, {
-            type: 'line',
-            data: {
-                labels: salesData.labels,
-                datasets: [{
-                    label: 'Monthly Sales',
-                    data: salesData.data,
-                    fill: false,
-                    borderColor: 'rgba(67, 97, 238, 1)',
-                    tension: 0.1
-                }]
+                autoSelected: 'zoom'
             },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    }
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 800,
+                animateGradually: {
+                    enabled: true,
+                    delay: 150
+                },
+                dynamicAnimation: {
+                    enabled: true,
+                    speed: 350
+                }
+            },
+            zoom: {
+                enabled: true,
+                type: 'x',
+                autoScaleYaxis: true
+            }
+        },
+        colors: ['#4e73df', '#1cc88a'],
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            curve: 'smooth',
+            width: 2
+        },
+        fill: {
+            type: 'gradient',
+            gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.7,
+                opacityTo: 0.3,
+                stops: [0, 100]
+            }
+        },
+        legend: {
+            position: 'bottom',
+            horizontalAlign: 'center',
+            itemMargin: {
+                horizontal: 10,
+                vertical: 5
+            },
+            markers: {
+                width: 12,
+                height: 12,
+                strokeWidth: 0,
+                radius: 12
+            }
+        },
+        xaxis: {
+            categories: @json($dates),
+            type: 'category',
+            labels: {
+                style: {
+                    colors: '#858796',
+                    fontSize: '11px',
+                    fontFamily: 'Nunito, sans-serif'
+                }
+            },
+            axisBorder: {
+                show: false
+            },
+            axisTicks: {
+                show: false
+            }
+        },
+        yaxis: {
+            labels: {
+                style: {
+                    colors: '#858796',
+                    fontSize: '11px',
+                    fontFamily: 'Nunito, sans-serif'
+                },
+                formatter: function (value) {
+                    return Math.floor(value);
                 }
             }
+        },
+        tooltip: {
+            style: {
+                fontSize: '12px',
+                fontFamily: 'Nunito, sans-serif'
+            },
+            x: {
+                format: 'dd/MM/yy HH:mm'
+            },
+            y: {
+                formatter: function (value) {
+                    return value + " items";
+                }
+            },
+            shared: true,
+            intersect: false
+        },
+        grid: {
+            borderColor: '#f8f9fc',
+            padding: {
+                top: 20,
+                right: 10,
+                bottom: 10,
+                left: 10
+            }
+        }
+    };
+
+    var chart = new ApexCharts(document.querySelector("#chart"), options);
+    chart.render();
+
+    // Responsive resize
+    window.addEventListener('resize', function () {
+        chart.updateOptions({
+            chart: {
+                width: '100%'
+            }
         });
-        @endif
-
-        // Update live date
-        function updateDateTime() {
-            const now = new Date();
-            document.getElementById('date-display').textContent = 
-                now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' - ' + 
-                now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-        }
-        setInterval(updateDateTime, 60000);
-        updateDateTime();
     });
-</script>
-@endpush
 
+    // Count-up animation
+    function countUp(elementId, target) {
+        const el = document.getElementById(elementId);
+        let start = 0;
+        const duration = 1500;
+        const step = Math.max(20, Math.floor(duration / target));
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        function countUp(elementId, target) {
-            const el = document.getElementById(elementId);
-            let start = 0;
-            const duration = 1500;
-            const step = Math.max(20, Math.floor(duration / target));
+        const timer = setInterval(() => {
+            start++;
+            el.textContent = start.toLocaleString();
+            if (start >= target) clearInterval(timer);
+        }, step);
+    }
 
-            const timer = setInterval(() => {
-                start++;
-                el.textContent = start.toLocaleString();
-                if (start >= target) clearInterval(timer);
-            }, step);
-        }
-
-        countUp("totalItems", {{ $totalItems }});
-        countUp("lowStockCount", {{ $lowStockCount }});
-        countUp("expiringSoonCount", {{ $expiringSoonCount }});
-        countUp("itemsSold", {{ $totalItemsSold }});
-    });
+    countUp("totalItems", {{ $totalItems }});
+    countUp("lowStockCount", {{ $lowStockCount }});
+    countUp("expiringSoonCount", {{ $expiringSoonCount }});
+    countUp("itemsSold", {{ $totalItemsSold }});
+});
 </script>
 
 @endsection
