@@ -6,14 +6,14 @@
     <link href="{{ asset('css/adminProfile.css') }}" rel="stylesheet" />
 @endpush
 
-<div class="container-fluid px-4 px-lg-5 py-4">
+<div class="container-fluid px-4 px-lg-5 py-5 mt-3"> 
     <!-- Page Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
         <div>
-            <h1 class="mb-2 text-gray-900 font-weight-bold">Profile Settings</h1>
-            <nav aria-label="breadcrumb" class="mt-3">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}" class="text-decoration-none text-primary">Dashboard</a></li>
+            <h1 class="h3 mb-2 text-gray-900 fw-bold">Profile Settings</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}" class="text-decoration-none">Dashboard</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Profile</li>
                 </ol>
             </nav>
