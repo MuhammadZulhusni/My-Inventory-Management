@@ -6,23 +6,31 @@
     <link href="{{ asset('css/edit.css') }}" rel="stylesheet" />
 @endpush
 
-<div class="container-fluid px-4 px-lg-5 py-4">
+<div class="container-fluid px-4 px-lg-5 py-4 mt-4">
     <!-- Page Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="mb-2 text-gray-900 font-weight-bold">Update Product</h1>
+            <h2 class="mb-1 fw-semibold text-primary">
+                <i class="fas fa-edit me-2"></i> Update Product
+            </h2>
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}" class="text-decoration-none text-primary">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('items.index') }}" class="text-decoration-none text-primary">Products</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Edit</li>
+                <ol class="breadcrumb mb-0 small mt-3">
+                    <li class="breadcrumb-item">
+                        <a href="{{ route('dashboard') }}" class="text-decoration-none text-secondary">
+                            <i class="fas fa-home me-1"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ route('items.index') }}" class="text-decoration-none text-secondary">Products</a>
+                    </li>
+                    <li class="breadcrumb-item active text-muted" aria-current="page">Edit</li>
                 </ol>
             </nav>
         </div>
     </div>
 
     <!-- Form Card -->
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mt-3">
         <div class="col-xl-8 col-lg-10">
             <div class="card shadow-sm border-0 overflow-hidden">
                 <div class="card-header bg-gradient-primary text-white p-4">

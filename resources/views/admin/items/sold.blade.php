@@ -2,7 +2,7 @@
 
 @section('admin')
 
-<div class="container-fluid px-4 py-4">
+<div class="container-fluid px-4 py-4 mt-3">
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
         <div class="card-header bg-white py-3 border-bottom">
             <div class="d-flex justify-content-between align-items-center">
