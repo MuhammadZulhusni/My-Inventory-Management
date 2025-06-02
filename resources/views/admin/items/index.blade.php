@@ -53,20 +53,26 @@
                 @endphp
                 <tr class="{{ $isCritical ? 'table-danger' : '' }}">
                   <td>
-                    <div class="d-flex align-items-center">
-                      @if($item->image)
-                        <img src="{{ asset('storage/'.$item->image) }}" alt="{{ $item->name }}" class="rounded me-2" width="40" height="40">
-                      @else
-                        <div class="bg-light rounded d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
-                          <i class="ri-box-3-line text-muted"></i>
-                        </div>
-                      @endif
-                      <div>
-                        <h6 class="mb-0">{{ $item->name }}</h6>
-                        <small class="text-muted">{{ $item->sku }}</small>
+                      <div class="d-flex align-items-center gap-2">
+                          @php
+                              $imagePath = public_path('storage/' . $item->image);
+                              $imageUrl = (!empty($item->image) && file_exists($imagePath))
+                                  ? asset('storage/' . $item->image)
+                                  : asset('uploads/no-item.png');
+                          @endphp
+
+                          <img src="{{ $imageUrl }}"
+                              alt="{{ $item->name }}"
+                              class="rounded border"
+                              width="40"
+                              height="40">
+                          <div>
+                              <h6 class="mb-0">{{ $item->name }}</h6>
+                              <small class="text-muted">{{ $item->sku }}</small>
+                          </div>
                       </div>
-                    </div>
                   </td>
+
                   <td>
                     <span class="{{ $isCritical ? 'fw-bold text-danger' : '' }}">
                       {{ $expiryDate->format('d M Y') }}
@@ -159,14 +165,19 @@
                   <tr>
                     <td>
                       <div class="d-flex align-items-center">
-                        @if($item->image)
-                          <img src="{{ asset('storage/'.$item->image) }}" alt="{{ $item->name }}" class="rounded me-2" width="40" height="40">
-                        @else
-                          <div class="bg-light rounded d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
-                            <i class="ri-box-3-line text-muted"></i>
-                          </div>
-                        @endif
-                        <div>
+                          @php
+                              $imagePath = public_path('storage/' . $item->image);
+                              $imageUrl = (!empty($item->image) && file_exists($imagePath))
+                                  ? asset('storage/' . $item->image)
+                                  : asset('uploads/no-item.png');
+                          @endphp
+
+                          <img src="{{ $imageUrl }}"
+                              alt="{{ $item->name }}"
+                              class="rounded border"
+                              width="40"
+                              height="40">
+                          <div>
                           <h6 class="mb-0">{{ $item->name }}</h6>
                           <small class="text-muted">{{ $item->sku }}</small>
                         </div>
@@ -228,10 +239,15 @@
 
 
 <div class="container-fluid py-4">
-    <!-- Header with Add New button -->
+    <!-- Header with Add New button and Back button -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h4 class="mb-0 fw-bold text-dark">Product Inventory</h4>
+            <div class="d-flex align-items-center gap-2 mt-3">
+                <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary btn-sm rounded-circle mt-3">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h4 class="mb-0 fw-bold text-dark mt-3">Product Inventory</h4>
+            </div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
@@ -550,7 +566,6 @@
         showConfirmButton: false
     });
 </script>
-
 @endif
 @endsection
 

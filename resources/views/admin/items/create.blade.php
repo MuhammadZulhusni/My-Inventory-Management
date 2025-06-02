@@ -6,7 +6,7 @@
     <link href="{{ asset('css/create.css') }}" rel="stylesheet" />
 @endpush
 
-<div class="container-fluid py-4">
+<div class="container-fluid py-4 mt-3">
     <!-- Breadcrumbs -->
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
@@ -16,14 +16,16 @@
         </ol>
     </nav>
 
-    <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white border-bottom py-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <h4 class="mb-0 text-primary"><i class="fas fa-cube me-2"></i> Add New Product</h4>
-                <a href="javascript:history.back();" class="btn btn-sm btn-outline-secondary">
-                    <i class="fas fa-arrow-left me-1"></i> Back to Products
-                </a>
-            </div>
+    <div class="card border-0 shadow-sm mt-3">
+        <div class="card-header bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 text-primary d-flex align-items-center gap-2">
+                <i class="fas fa-cube"></i>
+                <span>Add New Product</span>
+            </h5>
+            <a href="javascript:history.back();" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Products</span>
+            </a>
         </div>
         
         <div class="card-body">

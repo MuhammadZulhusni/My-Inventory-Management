@@ -86,7 +86,7 @@ $growth = $yesterdayCount > 0 ? round((($todayCount - $yesterdayCount) / $yester
 <div class="dashboard-content">
     <div class="container-fluid">
         <!-- Dashboard Header -->
-        <div class="row mb-4">
+        <div class="row mb-3">
             <div class="col-12">
                 <div class="d-flex flex-column flex-md-row align-items-center justify-content-between">
                     <div class="d-flex align-items-center mb-3 mb-md-0">
@@ -213,7 +213,7 @@ $growth = $yesterdayCount > 0 ? round((($todayCount - $yesterdayCount) / $yester
             <div class="col-lg-8">
                 <div class="card h-100">
                     <div class="card-header bg-white border-0">
-                        <h5 class="mb-0 fw-bold">Inventory Overview (Last 7 Days)</h5>
+                        <h5 class="mb-0 fw-bold mt-3">Inventory Overview (Last 7 Days)</h5>
                     </div>
                     <div class="card-body pt-0">
                         <div class="chart-container">
@@ -227,7 +227,7 @@ $growth = $yesterdayCount > 0 ? round((($todayCount - $yesterdayCount) / $yester
             <div class="col-lg-4">
                 <div class="card h-100">
                     <div class="card-header bg-white border-0">
-                        <h5 class="mb-0 fw-bold">Quick Actions</h5>
+                        <h5 class="mb-0 fw-bold mt-3">Quick Actions</h5>
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
@@ -296,7 +296,7 @@ $growth = $yesterdayCount > 0 ? round((($todayCount - $yesterdayCount) / $yester
             <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0 fw-bold">Low Stock Alerts</h5>
+                        <h5 class="fw-bold mt-3 mb-3">Low Stock Alerts</h5>
                         <a href="{{ route('items.index', ['stock_status' => 'low']) }}" class="btn btn-sm btn-primary">
                             <i class="fas fa-eye me-1"></i> View All
                         </a>
