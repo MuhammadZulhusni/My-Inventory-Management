@@ -26,7 +26,7 @@
     $yesterdayCount = Item::whereDate('created_at', $yesterday)->count();
 
     // Calculate growth percentage
-$growth = $yesterdayCount > 0 ? round((($todayCount - $yesterdayCount) / $yesterdayCount) * 100) : ($todayCount > 0 ? 100 : 0);
+    $growth = $yesterdayCount > 0 ? round((($todayCount - $yesterdayCount) / $yesterdayCount) * 100) : ($todayCount > 0 ? 100 : 0);
 
     // Fetch low stock items (below 10) and urgent restock (below 5)
     $lowStockCount = Item::where('quantity', '<', 10)->count();
