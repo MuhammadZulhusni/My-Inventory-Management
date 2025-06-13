@@ -291,22 +291,6 @@
             </div>
         </div>
 
-        <!-- Additional Graph Card -->
-        <div class="row g-4 mb-4">
-            <div class="col-12">
-                <div class="card h-100">
-                    <div class="card-header bg-white border-0">
-                        <h5 class="mb-0 fw-bold mt-3">New Graph Here</h5>
-                    </div>
-                    <div class="card-body pt-0">
-                        <div class="chart-container">
-                            <canvas id="stockTrendChart" height="100"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Low Stock Table -->
         <div class="row">
             <div class="col-12">
