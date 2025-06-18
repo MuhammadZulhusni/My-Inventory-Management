@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\backend\AdminController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\DashboardController;
 
 // Public route: Show login page
 Route::get('/', function () {
@@ -12,9 +13,7 @@ Route::get('/', function () {
 
 // Dashboard (authenticated users only)
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.index');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
 // Admin-specific routes
