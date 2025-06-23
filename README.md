@@ -54,10 +54,7 @@ This is a web-based **Inventory Management System** built using **Laravel** and 
 ![Product List](screenshots/products.png)
 
 ### Add New Item
-![Add Item](screenshots/add-item.png)
-
-### Chart View & Export
-![Chart View](screenshots/chart.png)
+![Add Item](screenshots/add.png)
 
 ---
 
