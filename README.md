@@ -44,19 +44,21 @@ This is a web-based **Inventory Management System** built using **Laravel** and 
 
 ## Screenshots
 
-### Login Page
-![Login Page](screenshots/login.png)
+<div align="center">
 
-### Dashboard
-![Dashboard](screenshots/dashboard.png)
+### Login Page  
+<img src="screenshots/login.png" alt="Login Page" width="600"/>
 
-### Product List
-![Product List](screenshots/products.png)
+### Dashboard  
+<img src="screenshots/dashboard.png" alt="Dashboard" width="600"/>
 
-### Add New Item
-![Add Item](screenshots/add.png)
+### Product List  
+<img src="screenshots/products.png" alt="Product List" width="600"/>
 
----
+### Add New Item  
+<img src="screenshots/add.png" alt="Add Item" width="600"/>
+
+</div>
 
 ## Getting Started
 
